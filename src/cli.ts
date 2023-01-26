@@ -24,7 +24,7 @@ export async function main() {
       );
     }
   } catch (error) {
-    // console.log(chalk.red((error as Error).message));
+    console.log(chalk.red((error as Error).message));
     process.exit(1);
   }
 }

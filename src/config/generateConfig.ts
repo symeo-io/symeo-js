@@ -7,7 +7,7 @@ import { generateIndex } from './generateIndex';
 import { transpileClient } from './transpileConfig';
 import { dir } from 'tmp-promise';
 
-export const OUTPUT_PATH = './node_modules/.symeo/config';
+export const OUTPUT_PATH = './node_modules/symeo/config';
 export async function generateConfigFromLocalFile(
   configFormat: ConfigFormat,
   config: Config,
