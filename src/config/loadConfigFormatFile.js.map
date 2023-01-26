@@ -1,0 +1,1 @@
+{"version":3,"file":"loadConfigFormatFile.js","sourceRoot":"","sources":["loadConfigFormatFile.ts"],"names":[],"mappings":";;;;;;AAAA,oDAA0B;AAE1B,4CAAoB;AAEpB,SAAgB,oBAAoB,CAAC,IAAY;IAC/C,IAAI,CAAC,YAAE,CAAC,UAAU,CAAC,IAAI,CAAC,EAAE;QACxB,MAAM,IAAI,KAAK,CAAC,gCAAgC,GAAG,IAAI,CAAC,CAAC;KAC1D;IAED,OAAO,gBAAI,CAAC,IAAI,CAAC,IAAI,CAAiB,CAAC;AACzC,CAAC;AAND,oDAMC"}

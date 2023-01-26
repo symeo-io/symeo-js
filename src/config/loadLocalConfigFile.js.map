@@ -1,0 +1,1 @@
+{"version":3,"file":"loadLocalConfigFile.js","sourceRoot":"","sources":["loadLocalConfigFile.ts"],"names":[],"mappings":";;;;;;AAAA,oDAA0B;AAE1B,4CAAoB;AAEpB,SAAgB,mBAAmB,CAAC,IAAY;IAC9C,IAAI,CAAC,YAAE,CAAC,UAAU,CAAC,IAAI,CAAC,EAAE;QACxB,MAAM,IAAI,KAAK,CAAC,+BAA+B,GAAG,IAAI,CAAC,CAAC;KACzD;IAED,OAAO,gBAAI,CAAC,IAAI,CAAC,IAAI,CAAW,CAAC;AACnC,CAAC;AAND,kDAMC"}
