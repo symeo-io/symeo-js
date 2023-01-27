@@ -35,7 +35,6 @@ jobs:
       - image: cimg/node:16.16.0
     steps:
       - checkout
-      - aws-cli/setup
       - restore_cache:
           key: dependency-cache-{{ checksum "~/symeo-js/yarn.lock" }}
       - run:
@@ -61,7 +60,7 @@ jobs:
           template: basic_success_1
 
 workflows:
-  webapp:
+  package:
     jobs:
       - lint:
           context:
