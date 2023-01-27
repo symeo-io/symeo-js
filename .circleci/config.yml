@@ -44,14 +44,13 @@ jobs:
           name: Build
           command: yarn build
       - run:
-          name: Config github registry
-          command: yarn config set registry https://npm.pkg.github.com/symeo-io
-      - run:
           name: Authenticate to registry
-          command: echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_TOKEN}" > .npmrc
+          command: |
+            echo "@symeo-io:registry=https://npm.pkg.github.com" > ~/symeo-js/.npmrc
+            echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_TOKEN}" >> ~/symeo-js/.npmrc
       - run:
           name: Publish
-          command: yarn publish
+          command: npm publish
       - slack/notify:
           event: fail
           template: basic_fail_1
