@@ -58,7 +58,7 @@ function stringifyDiagnostic(diagnostic: tsc.Diagnostic) {
   if (diagnostic.file) {
     const { line, character } = tsc.getLineAndCharacterOfPosition(
       diagnostic.file,
-      diagnostic.start!,
+      diagnostic.start as number,
     );
     const message = tsc.flattenDiagnosticMessageText(
       diagnostic.messageText,
