@@ -1,0 +1,78 @@
+version: 2.1
+
+orbs:
+  aws-cli: circleci/aws-cli@3.1
+  slack: circleci/slack@4.10.1
+
+jobs:
+  lint:
+    working_directory: ~/symeo-js
+    docker:
+      - image: cimg/node:16.16.0
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "~/symeo-js/yarn.lock" }}
+      - run:
+          name: Install dependencies
+          command: yarn install
+      - save_cache:
+          key: dependency-cache-{{ checksum "~/symeo-js/yarn.lock" }}
+          paths:
+            - node_modules
+      - run:
+          name: Lint
+          command: yarn lint
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: basic_success_1
+  publish:
+    working_directory: ~/symeo-js
+    docker:
+      - image: cimg/node:16.16.0
+    steps:
+      - checkout
+      - aws-cli/setup
+      - restore_cache:
+          key: dependency-cache-{{ checksum "~/symeo-js/yarn.lock" }}
+      - run:
+          name: Install dependencies
+          command: yarn install
+      - run:
+          name: Build
+          command: yarn build
+      - run:
+          name: Config github registry
+          command: yarn config set registry https://npm.pkg.github.com/symeo-io
+      - run:
+          name: Authenticate to registry
+          command: echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_TOKEN}" > .npmrc
+      - run:
+          name: Publish
+          command: yarn publish
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: basic_success_1
+
+workflows:
+  webapp:
+    jobs:
+      - lint:
+          context:
+            - slack-notifications
+      - publish:
+          requires:
+            - lint
+          context:
+            - slack-notifications
+            - github-packages
+          filters:
+            branches:
+              only:
+                - main
