@@ -1,5 +1,5 @@
 {
-  "name": "@symeo/cli",
+  "name": "symeo",
   "version": "0.0.1",
   "main": "dist/cli.ts",
   "license": "MIT",
