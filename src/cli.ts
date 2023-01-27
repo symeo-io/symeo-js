@@ -24,6 +24,8 @@ export async function main() {
         'Generating config',
         generateConfigFromLocalFile(configFormat, config),
       );
+    } else {
+      // TODO fetch config from Saas
     }
   } catch (error) {
     console.log(chalk.red((error as Error).message));
