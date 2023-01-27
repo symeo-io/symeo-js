@@ -61,7 +61,7 @@ jobs:
           template: basic_success_1
 
 workflows:
-  webapp:
+  package:
     jobs:
       - lint:
           context:
