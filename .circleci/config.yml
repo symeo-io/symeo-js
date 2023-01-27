@@ -48,7 +48,7 @@ jobs:
           command: yarn config set registry https://npm.pkg.github.com/symeo-io
       - run:
           name: Authenticate to registry
-          command: echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_TOKEN}" > .npmrc
+          command: echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_TOKEN}" > ~/.npmrc
       - run:
           name: Publish
           command: yarn publish
