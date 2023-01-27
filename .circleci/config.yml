@@ -48,10 +48,10 @@ jobs:
           command: npm config set registry https://npm.pkg.github.com/symeo-io/symeo-js
       - run:
           name: Authenticate to registry
-          command: echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_TOKEN}" > ~/.npmrc
+          command: echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_TOKEN}" > ~/symeo-js/.npmrc
       - run:
           name: Publish
-          command: npm publish
+          command: npm publish --registry https://npm.pkg.github.com/symeo-io/symeo-js
       - slack/notify:
           event: fail
           template: basic_fail_1
