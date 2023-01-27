@@ -4,7 +4,7 @@
   "main": "dist/cli.ts",
   "license": "MIT",
   "bin": {
-    "symeo": "dist/cli.js"
+    "symeo": "./dist/cli.js"
   },
   "scripts": {
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "chalk": "^4.1.2",
+    "change-case": "^4.1.2",
     "commander": "^10.0.0",
     "fs-extra": "^11.1.0",
     "glob": "^8.1.0",

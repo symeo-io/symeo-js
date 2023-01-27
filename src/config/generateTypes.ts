@@ -1,6 +1,7 @@
 import { ConfigFormat, ConfigProperty } from '../types';
 import { join } from 'path';
 import fsExtra from 'fs-extra';
+import { camelCase } from 'change-case';
 
 export async function generateTypes(path: string, configFormat: ConfigFormat) {
   const typesOutputPath = join(path, './types.ts');
@@ -16,7 +17,7 @@ function configFormatToTypeScriptType(configFormat: ConfigFormat): string {
   return `{
     ${Object.keys(configFormat).map(
       (property) =>
-        `${property}: ${
+        `${camelCase(property)}: ${
           isConfigProperty(configFormat[property])
             ? configPropertyToTypeScriptType(
                 configFormat[property] as ConfigProperty,

@@ -1,4 +1,4 @@
 database:
   configuration:
-    tableName:
+    table-name:
       type: string

@@ -1,3 +1,5 @@
+#! /usr/bin/env node
+
 import chalk from 'chalk';
 import ora from 'ora';
 import { parseArgs } from './parseArgs';

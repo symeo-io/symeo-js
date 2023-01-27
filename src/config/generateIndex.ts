@@ -1,6 +1,7 @@
 import { Config } from '../types';
 import fsExtra from 'fs-extra';
 import { join } from 'path';
+import { camelCase } from 'change-case';
 
 export async function generateIndex(path: string, config: Config) {
   const indexOutputPath = join(path, './index.ts');
@@ -16,7 +17,7 @@ function configToTypeScript(config: Config): string {
   return `{
     ${Object.keys(config).map(
       (property) =>
-        `${property}: ${
+        `${camelCase(property)}: ${
           typeof config[property] === 'object'
             ? configToTypeScript(config[property] as Config)
             : JSON.stringify(config[property])
