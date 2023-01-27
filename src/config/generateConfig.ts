@@ -15,7 +15,7 @@ export async function generateConfigFromLocalFile(
   await mkdirp(OUTPUT_PATH);
   const randomTmpDir = await tmpDir('symeo');
 
-  await copyStaticFiles(randomTmpDir);
+  await copyStaticFiles(OUTPUT_PATH);
   await generateTsClient(randomTmpDir, configFormat, config);
   await transpileClient(randomTmpDir, OUTPUT_PATH);
 }
