@@ -17,7 +17,7 @@ function configFormatToTypeScriptType(configFormat: ConfigFormat): string {
   return `{
     ${Object.keys(configFormat).map(
       (property) =>
-        `${camelCase(property)}: ${
+        `${camelCase(property)}${configFormat[property].optional ? '?' : ''}: ${
           isConfigProperty(configFormat[property])
             ? configPropertyToTypeScriptType(
                 configFormat[property] as ConfigProperty,
