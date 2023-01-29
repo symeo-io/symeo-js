@@ -2,10 +2,12 @@
 
 import chalk from 'chalk';
 import ora from 'ora';
+import spawn from 'cross-spawn';
 import { parseArgs } from './parseArgs';
 import { loadConfigFormatFile } from './config/loadConfigFormatFile';
-import { loadLocalConfigFile } from './config/loadLocalConfigFile';
-import { generateConfigFromLocalFile } from './config/generateConfig';
+import { generateConfigLibrary } from './config/generateConfig';
+
+export const CONFIG_VALUES_FILE_ENV_VARIABLE_NAME = 'SYMEO_CONFIG_FILE';
 
 export async function main() {
   const cwd = process.cwd();
@@ -18,14 +20,30 @@ export async function main() {
       `Loaded config format from ${chalk.green(cliArgs.configFormatPath)}`,
     );
 
+    await spin('Generating config', generateConfigLibrary(configFormat));
+
+    let configFilePath;
     if (!cliArgs.envKey) {
-      const config = loadLocalConfigFile(cliArgs.envFilePath);
-      await spin(
-        'Generating config',
-        generateConfigFromLocalFile(configFormat, config),
-      );
+      configFilePath = cliArgs.envFilePath;
     } else {
       // TODO fetch config from Saas
+    }
+    // TODO check file respect config format
+
+    if (cliArgs.command) {
+      spawn(cliArgs.command, cliArgs.commandArgs, {
+        stdio: 'inherit',
+        env: {
+          ...process.env,
+          [CONFIG_VALUES_FILE_ENV_VARIABLE_NAME]: configFilePath,
+        },
+      }).on('exit', function (exitCode, signal) {
+        if (typeof exitCode === 'number') {
+          process.exit(exitCode);
+        } else {
+          process.kill(process.pid, signal?.toString());
+        }
+      });
     }
   } catch (error) {
     console.log(chalk.red((error as Error).message));

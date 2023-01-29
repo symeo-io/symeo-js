@@ -15,7 +15,7 @@ export async function transpileClient(
     outputs.map(async ({ directory, module }) => {
       const outDir = resolve(outputPath, directory);
 
-      const target = tsc.ScriptTarget.ES2018;
+      const target = tsc.ScriptTarget.ES2019;
       const options: tsc.CompilerOptions = {
         declaration: true,
         target,
