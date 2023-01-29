@@ -8,6 +8,8 @@ export interface SymeoCliArgs {
   configFormatPath: string;
   envKey?: string;
   envFilePath: string;
+  command: string;
+  commandArgs: string[];
 }
 
 export function parseArgs({
@@ -33,11 +35,15 @@ export function parseArgs({
   program.parse(argv);
 
   const rawOpts = program.opts();
+  const command = program.args[0];
+  const commandArgs = program.args.slice(1);
 
   return {
     configFormatPath: joinPaths({ cwd, path: rawOpts.file }),
     envFilePath: joinPaths({ cwd, path: rawOpts.envFile }),
     envKey: rawOpts.envKey,
+    command,
+    commandArgs,
   };
 }
 
