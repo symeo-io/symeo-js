@@ -1,5 +1,5 @@
 import mkdirp from 'mkdirp';
-import { ConfigFormat } from '../types';
+import { ConfigurationContract } from '../types';
 import { join } from 'path';
 import fsExtra from 'fs-extra';
 import { generateTypes } from './generateTypes';
@@ -8,20 +8,23 @@ import { transpileClient } from './transpileConfig';
 import { dir } from 'tmp-promise';
 import checksum from 'checksum';
 
-export const OUTPUT_PATH = './node_modules/symeo/config';
+export const OUTPUT_PATH = './node_modules/@symeo-io/config';
 export const CHECKSUM_PATH = OUTPUT_PATH + '/checksum';
-export async function generateConfigLibrary(configFormat: ConfigFormat) {
+export async function generateConfigLibrary(
+  configFormat: ConfigurationContract,
+  forceRecreate = false,
+) {
   const configChecksum = checksum(JSON.stringify(configFormat));
 
-  if (shouldRegenerateConfigLibrary(configChecksum)) {
+  if (forceRecreate || shouldRegenerateConfigLibrary(configChecksum)) {
     await mkdirp(OUTPUT_PATH);
-    fsExtra.writeFileSync(CHECKSUM_PATH, configChecksum, 'utf8');
 
     const randomTmpDir = await tmpDir('symeo');
 
     await copyStaticFiles(OUTPUT_PATH);
     await generateTsClient(randomTmpDir, configFormat);
     await transpileClient(randomTmpDir, OUTPUT_PATH);
+    fsExtra.writeFileSync(CHECKSUM_PATH, configChecksum, 'utf8');
   }
 }
 
@@ -41,7 +44,10 @@ async function copyStaticFiles(path: string) {
   );
 }
 
-async function generateTsClient(path: string, configFormat: ConfigFormat) {
+async function generateTsClient(
+  path: string,
+  configFormat: ConfigurationContract,
+) {
   await generateTypes(path, configFormat);
   await generateIndex(path);
 }

@@ -1,11 +1,11 @@
 import YAML from 'yamljs';
-import { ConfigFormat } from '../types';
+import { ConfigurationContract } from '../types';
 import fs from 'fs';
 
-export function loadConfigFormatFile(path: string): ConfigFormat {
+export function loadConfigFormatFile(path: string): ConfigurationContract {
   if (!fs.existsSync(path)) {
     throw new Error('Missing config format file at ' + path);
   }
 
-  return YAML.load(path) as ConfigFormat;
+  return YAML.load(path) as ConfigurationContract;
 }

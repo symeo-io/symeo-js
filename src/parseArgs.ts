@@ -1,13 +1,14 @@
 import { Command } from 'commander';
 import { isAbsolute, join } from 'path';
 
-const DEFAULT_CONFIG_FORMAT_PATH = './symeo.config.yml';
-const DEFAULT_LOCAL_CONFIG_PATH = './symeo.local.yml';
+const DEFAULT_CONFIGURATION_CONTRACT_PATH = './symeo.config.yml';
+const DEFAULT_LOCAL_CONFIGURATION_PATH = './symeo.local.yml';
 
 export interface SymeoCliArgs {
-  configFormatPath: string;
-  envKey?: string;
-  envFilePath: string;
+  configurationContractPath: string;
+  apiKey?: string;
+  localConfigurationPath: string;
+  forceRecreate: boolean;
   command: string;
   commandArgs: string[];
 }
@@ -21,15 +22,20 @@ export function parseArgs({
 }): SymeoCliArgs {
   const program = new Command();
   program.option(
-    '-f, --file <file>',
-    'Config format file',
-    DEFAULT_CONFIG_FORMAT_PATH,
+    '-c, --contract-file <file>',
+    'Configuration contract file',
+    DEFAULT_CONFIGURATION_CONTRACT_PATH,
   );
-  program.option('-k, --env-key <key>', 'Environment key');
+  program.option('-k, --api-key <key>', 'API Key');
   program.option(
-    '-e, --env-file <env>',
-    'Environment local file',
-    DEFAULT_LOCAL_CONFIG_PATH,
+    '-f, --local-file <file>',
+    'Local configuration file',
+    DEFAULT_LOCAL_CONFIGURATION_PATH,
+  );
+  program.option(
+    '-r, --force-recreate',
+    'Force config creation even if contract is identical',
+    false,
   );
   program.version('0.0.1');
   program.parse(argv);
@@ -39,9 +45,10 @@ export function parseArgs({
   const commandArgs = program.args.slice(1);
 
   return {
-    configFormatPath: joinPaths({ cwd, path: rawOpts.file }),
-    envFilePath: joinPaths({ cwd, path: rawOpts.envFile }),
-    envKey: rawOpts.envKey,
+    configurationContractPath: joinPaths({ cwd, path: rawOpts.contractFile }),
+    localConfigurationPath: joinPaths({ cwd, path: rawOpts.localFile }),
+    apiKey: rawOpts.apiKey,
+    forceRecreate: rawOpts.forceRecreate,
     command,
     commandArgs,
   };
