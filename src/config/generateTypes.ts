@@ -1,8 +1,11 @@
-import { ConfigFormat, ConfigProperty } from '../types';
+import { ConfigurationContract, ConfigurationProperty } from '../types';
 import { join } from 'path';
 import fsExtra from 'fs-extra';
 
-export async function generateTypes(path: string, configFormat: ConfigFormat) {
+export async function generateTypes(
+  path: string,
+  configFormat: ConfigurationContract,
+) {
   const typesOutputPath = join(path, './types.ts');
 
   const types = `export type Config = ${configFormatToTypeScriptType(
@@ -12,24 +15,38 @@ export async function generateTypes(path: string, configFormat: ConfigFormat) {
   await fsExtra.writeFile(typesOutputPath, types);
 }
 
-function configFormatToTypeScriptType(configFormat: ConfigFormat): string {
-  return `{
-    ${Object.keys(configFormat).map(
-      (property) =>
-        `${property}${configFormat[property].optional ? '?' : ''}: ${
-          isConfigProperty(configFormat[property])
-            ? configPropertyToTypeScriptType(
-                configFormat[property] as ConfigProperty,
-              )
-            : configFormatToTypeScriptType(
-                configFormat[property] as ConfigFormat,
-              )
-        }`,
-    )}
-  }`;
+function configFormatToTypeScriptType(contract: ConfigurationContract): string {
+  let result = '{\n';
+
+  Object.keys(contract).forEach((propertyName) => {
+    const property = contract[propertyName];
+    const propertyTypeName = generatePropertyTypeName(propertyName, contract);
+
+    const body = isConfigProperty(property)
+      ? configPropertyToTypeScriptType(property as ConfigurationProperty)
+      : configFormatToTypeScriptType(property as ConfigurationContract);
+
+    result += `${propertyTypeName}: ${body};\n`;
+  });
+
+  result += '}\n';
+
+  return result;
 }
 
-function configPropertyToTypeScriptType(configProperty: ConfigProperty) {
+function generatePropertyTypeName(
+  propertyName: string,
+  contract: ConfigurationContract,
+) {
+  const property = contract[propertyName];
+  if (!isConfigProperty(property)) {
+    return `"${propertyName}"`;
+  }
+
+  return `"${propertyName}"${property.optional ? '?' : ''}`;
+}
+
+function configPropertyToTypeScriptType(configProperty: ConfigurationProperty) {
   switch (configProperty.type) {
     case 'boolean':
       return 'boolean';
@@ -41,6 +58,6 @@ function configPropertyToTypeScriptType(configProperty: ConfigProperty) {
   }
 }
 
-function isConfigProperty(el: ConfigFormat | ConfigProperty) {
+function isConfigProperty(el: ConfigurationContract | ConfigurationProperty) {
   return el.type && typeof el.type === 'string';
 }
