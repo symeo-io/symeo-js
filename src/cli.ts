@@ -7,7 +7,10 @@ import { parseArgs } from './parseArgs';
 import { loadConfigFormatFile } from './config/loadConfigFormatFile';
 import { generateConfigLibrary } from './config/generateConfig';
 
-export const CONFIG_VALUES_FILE_ENV_VARIABLE_NAME = 'SYMEO_CONFIG_FILE';
+export const LOCAL_CONFIGURATION_FILE_VARIABLE_NAME =
+  'SYMEO_LOCAL_CONFIGURATION_FILE';
+export const API_URL_VARIABLE_NAME = 'SYMEO_API_URL';
+export const API_KEY_VARIABLE_NAME = 'SYMEO_API_KEY';
 
 export async function main() {
   const cwd = process.cwd();
@@ -15,27 +18,35 @@ export async function main() {
   try {
     const cliArgs = parseArgs({ argv: process.argv, cwd });
 
-    const configFormat = loadConfigFormatFile(cliArgs.configFormatPath);
+    const configFormat = loadConfigFormatFile(
+      cliArgs.configurationContractPath,
+    );
     console.log(
-      `Loaded config format from ${chalk.green(cliArgs.configFormatPath)}`,
+      `Loaded config format from ${chalk.green(
+        cliArgs.configurationContractPath,
+      )}`,
     );
 
-    await spin('Generating config', generateConfigLibrary(configFormat));
+    await spin(
+      'Generating config',
+      generateConfigLibrary(configFormat, cliArgs.forceRecreate),
+    );
 
-    let configFilePath;
-    if (!cliArgs.envKey) {
-      configFilePath = cliArgs.envFilePath;
+    const commandEnvVariables: any = {};
+    if (!cliArgs.apiKey) {
+      commandEnvVariables[LOCAL_CONFIGURATION_FILE_VARIABLE_NAME] =
+        cliArgs.localConfigurationPath;
     } else {
-      // TODO fetch config from Saas
+      commandEnvVariables[API_URL_VARIABLE_NAME] = cliArgs.apiUrl;
+      commandEnvVariables[API_KEY_VARIABLE_NAME] = cliArgs.apiKey;
     }
-    // TODO check file respect config format
 
     if (cliArgs.command) {
       spawn(cliArgs.command, cliArgs.commandArgs, {
         stdio: 'inherit',
         env: {
           ...process.env,
-          [CONFIG_VALUES_FILE_ENV_VARIABLE_NAME]: configFilePath,
+          ...commandEnvVariables,
         },
       }).on('exit', function (exitCode, signal) {
         if (typeof exitCode === 'number') {

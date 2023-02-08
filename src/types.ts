@@ -1,12 +1,15 @@
-export type ConfigPropertyType = 'string' | 'integer' | 'float' | 'boolean';
-export type ConfigProperty = {
-  type: ConfigPropertyType;
+export type ConfigurationPropertyType =
+  | 'string'
+  | 'integer'
+  | 'float'
+  | 'boolean';
+
+export type ConfigurationProperty = {
+  type: ConfigurationPropertyType;
   secret?: boolean;
   optional?: boolean;
 };
 
-export type ConfigFormat = {
-  [property: string]: ConfigFormat | ConfigProperty;
+export type ConfigurationContract = {
+  [property: string]: ConfigurationContract | ConfigurationProperty;
 };
-
-export type Config = { [property: string]: string | number | boolean | Config };
