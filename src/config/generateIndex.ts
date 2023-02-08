@@ -2,6 +2,7 @@ import fsExtra from 'fs-extra';
 import { join } from 'path';
 import {
   API_KEY_VARIABLE_NAME,
+  API_URL_VARIABLE_NAME,
   LOCAL_CONFIGURATION_FILE_VARIABLE_NAME,
 } from '../cli';
 
@@ -16,18 +17,26 @@ export async function generateIndex(path: string) {
 
     let config: Config;
     // @ts-ignore
+    const apiUrl = process.env.${API_URL_VARIABLE_NAME};
+    // @ts-ignore
     const apiKey = process.env.${API_KEY_VARIABLE_NAME};
     // @ts-ignore
     const localConfigFilePath = process.env.${LOCAL_CONFIGURATION_FILE_VARIABLE_NAME};
     
-    if (apiKey) {
-      const response = fetch('http://localhost:9999/api/v1/values', {
+    if (apiUrl && apiKey) {
+      const response = fetch(apiUrl, {
         headers: {
           'X-API-KEY': apiKey
         }
-      }).json();
+      });
       
-      config = response.values;
+      if (response.status !== 200) {
+        console.error('Error when fetching config: ', response.statusText);
+        // @ts-ignore
+        process.exit(1);
+      }
+      
+      config = response.json().values;
     } else if (localConfigFilePath) {
       config = YAML.load(localConfigFilePath) as Config;    
     } else {

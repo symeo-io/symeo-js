@@ -3,9 +3,11 @@ import { isAbsolute, join } from 'path';
 
 const DEFAULT_CONFIGURATION_CONTRACT_PATH = './symeo.config.yml';
 const DEFAULT_LOCAL_CONFIGURATION_PATH = './symeo.local.yml';
+const DEFAULT_API_URL = 'https://api.symeo.io/api/v1/values';
 
 export interface SymeoCliArgs {
   configurationContractPath: string;
+  apiUrl: string;
   apiKey?: string;
   localConfigurationPath: string;
   forceRecreate: boolean;
@@ -28,6 +30,11 @@ export function parseArgs({
   );
   program.option('-k, --api-key <key>', 'API Key');
   program.option(
+    '-a, --api-url <url>',
+    'Api endpoint used to fetch configuration',
+    DEFAULT_API_URL,
+  );
+  program.option(
     '-f, --local-file <file>',
     'Local configuration file',
     DEFAULT_LOCAL_CONFIGURATION_PATH,
@@ -47,6 +54,7 @@ export function parseArgs({
   return {
     configurationContractPath: joinPaths({ cwd, path: rawOpts.contractFile }),
     localConfigurationPath: joinPaths({ cwd, path: rawOpts.localFile }),
+    apiUrl: rawOpts.apiUrl,
     apiKey: rawOpts.apiKey,
     forceRecreate: rawOpts.forceRecreate,
     command,
