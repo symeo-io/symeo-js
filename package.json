@@ -1,7 +1,7 @@
 {
   "name": "@symeo-io/symeo",
   "repository": "https://github.com/symeo-io/symeo-js",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "main": "dist/cli.ts",
   "license": "MIT",
   "bin": {
