@@ -42,7 +42,7 @@ jobs:
           command: yarn install
       - run:
           name: Build
-          command: yarn build
+          command: yarn build:cli && yarn build:config
       - run:
           name: Authenticate to registry
           command: |
