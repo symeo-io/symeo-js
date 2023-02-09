@@ -1,7 +1,0 @@
-database:
-  dynamodb-url:
-    type: string
-    optional: true
-  configuration:
-    table-name:
-      type: string
