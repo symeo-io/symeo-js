@@ -49,10 +49,7 @@ export async function transpileClient(
   );
 }
 
-const outputs = [
-  { module: tsc.ModuleKind.CommonJS, directory: 'cjs' },
-  { module: tsc.ModuleKind.ESNext, directory: 'esm' },
-];
+const outputs = [{ module: tsc.ModuleKind.CommonJS, directory: './' }];
 
 function stringifyDiagnostic(diagnostic: tsc.Diagnostic) {
   if (diagnostic.file) {

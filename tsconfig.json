@@ -13,6 +13,6 @@
     "esModuleInterop": true,
     "skipLibCheck": true
   },
-  "include": ["src", "test"],
-  "exclude": ["dist", "node_modules", "static"],
+  "include": ["src/cli", "src/configuration", "tests"],
+  "exclude": ["dist", "node_modules", "config"],
 }

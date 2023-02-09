@@ -4,8 +4,8 @@ import chalk from 'chalk';
 import ora from 'ora';
 import spawn from 'cross-spawn';
 import { parseArgs } from './parseArgs';
-import { loadConfigFormatFile } from './config/loadConfigFormatFile';
-import { generateConfigLibrary } from './config/generateConfig';
+import { loadConfigFormatFile } from './config-generator/loadConfigFormatFile';
+import { generateConfigLibrary } from './config-generator/generateConfig';
 
 export const LOCAL_CONFIGURATION_FILE_VARIABLE_NAME =
   'SYMEO_LOCAL_CONFIGURATION_FILE';

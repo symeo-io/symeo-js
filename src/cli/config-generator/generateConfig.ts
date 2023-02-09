@@ -1,15 +1,14 @@
 import mkdirp from 'mkdirp';
 import { ConfigurationContract } from '../types';
-import { join } from 'path';
 import fsExtra from 'fs-extra';
-import { generateTypes } from './generateTypes';
-import { generateIndex } from './generateIndex';
+import { generateTypesFile } from './generateTypes';
 import { transpileClient } from './transpileConfig';
 import { dir } from 'tmp-promise';
 import checksum from 'checksum';
+import { join } from 'path';
 
-export const OUTPUT_PATH = './node_modules/@symeo-io/config';
-export const CHECKSUM_PATH = OUTPUT_PATH + '/checksum';
+export const OUTPUT_PATH = join(__dirname, '../../config');
+export const CHECKSUM_PATH = join(OUTPUT_PATH, './checksum');
 export async function generateConfigLibrary(
   configFormat: ConfigurationContract,
   forceRecreate = false,
@@ -21,8 +20,7 @@ export async function generateConfigLibrary(
 
     const randomTmpDir = await tmpDir('symeo');
 
-    await copyStaticFiles(OUTPUT_PATH);
-    await generateTsClient(randomTmpDir, configFormat);
+    await generateTypesFile(randomTmpDir, configFormat);
     await transpileClient(randomTmpDir, OUTPUT_PATH);
     fsExtra.writeFileSync(CHECKSUM_PATH, configChecksum, 'utf8');
   }
@@ -33,23 +31,6 @@ function shouldRegenerateConfigLibrary(configChecksum: string) {
     !fsExtra.existsSync(CHECKSUM_PATH) ||
     fsExtra.readFileSync(CHECKSUM_PATH, 'utf8') !== configChecksum
   );
-}
-
-async function copyStaticFiles(path: string) {
-  const staticDir = join(__dirname, '../../static');
-  const dir = await fsExtra.readdir(staticDir);
-
-  await Promise.all(
-    dir.map((file) => fsExtra.copy(join(staticDir, file), join(path, file))),
-  );
-}
-
-async function generateTsClient(
-  path: string,
-  configFormat: ConfigurationContract,
-) {
-  await generateTypes(path, configFormat);
-  await generateIndex(path);
 }
 
 async function tmpDir(prefix: string) {

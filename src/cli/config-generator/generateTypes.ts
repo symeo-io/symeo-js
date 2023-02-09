@@ -2,7 +2,7 @@ import { ConfigurationContract, ConfigurationProperty } from '../types';
 import { join } from 'path';
 import fsExtra from 'fs-extra';
 
-export async function generateTypes(
+export async function generateTypesFile(
   path: string,
   configFormat: ConfigurationContract,
 ) {

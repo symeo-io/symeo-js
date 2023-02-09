@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "src/configuration"
+  ],
+  "exclude": ["cli", "node_modules", "config", "tests"],
+  "compilerOptions": {
+    "outDir": "config",
+    "rootDir": "src/configuration"
+  }
+}
