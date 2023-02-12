@@ -70,7 +70,7 @@ jobs:
           command: git tag $(git log -1 --pretty=%B)
       - run:
           name: Git push
-          command: git push && git push origin $(git log -1 --pretty=%B)
+          command: git push --set-upstream origin main && git push origin $(git log -1 --pretty=%B)
       - slack/notify:
           event: fail
           template: basic_fail_1
