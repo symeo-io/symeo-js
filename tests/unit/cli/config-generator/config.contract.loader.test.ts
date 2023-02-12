@@ -3,10 +3,15 @@ import { ConfigContractLoader } from 'src/cli/config-generator/config.contract.l
 import YAML from 'yamljs';
 import fsExtra from 'fs-extra';
 import { ConfigurationContract } from 'src/cli/types';
+import { dir } from 'tmp-promise';
 
 describe('loadConfigFormatFile', () => {
-  const tmpDirectoryPath: string = join(__dirname, './tmp');
+  let tmpDirectoryPath: string;
   const configContractLoader: ConfigContractLoader = new ConfigContractLoader();
+
+  beforeEach(async () => {
+    tmpDirectoryPath = (await dir({ prefix: 'symeo-test' })).path;
+  });
 
   it('should throw new error if config file path does not exist', () => {
     // Given

@@ -29,6 +29,30 @@ jobs:
       - slack/notify:
           event: pass
           template: basic_success_1
+  test:
+    working_directory: ~/symeo-js
+    docker:
+      - image: cimg/node:16.16.0
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "~/symeo-js/yarn.lock" }}
+      - run:
+          name: Install dependencies
+          command: yarn install
+      - save_cache:
+          key: dependency-cache-{{ checksum "~/symeo-js/yarn.lock" }}
+          paths:
+            - node_modules
+      - run:
+          name: Test
+          command: yarn test
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: basic_success_1
   publish:
     working_directory: ~/symeo-js
     docker:
@@ -64,9 +88,13 @@ workflows:
       - lint:
           context:
             - slack-notifications
+      - test:
+          context:
+            - slack-notifications
       - publish:
           requires:
             - lint
+            - test
           context:
             - slack-notifications
             - github-packages
