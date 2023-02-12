@@ -3,14 +3,16 @@ import { join } from 'path';
 import { ConfigurationPropertyType } from 'src/cli/types';
 import fsExtra from 'fs-extra';
 import SpyInstance = jest.SpyInstance;
+import { dir } from 'tmp-promise';
 
 describe('ConfigTypes', () => {
   describe('generateTypesFile', () => {
-    const mockTypesOutputPath: string = join(__dirname, './tmp');
+    let mockTypesOutputPath: string;
     const configTypes: ConfigTypesGenerator = new ConfigTypesGenerator();
     let mockWriteFile: SpyInstance;
 
-    beforeEach(() => {
+    beforeEach(async () => {
+      mockTypesOutputPath = (await dir({ prefix: 'symeo-test' })).path;
       fsExtra.writeFile(join(mockTypesOutputPath, './types.ts'), '');
       mockWriteFile = jest.spyOn(fsExtra, 'writeFile');
     });
