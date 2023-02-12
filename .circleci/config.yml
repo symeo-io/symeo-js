@@ -60,6 +60,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Configure git
+          command: git config user.email "ci@symeo.io" && git config user.name "Symeo CI"
+      - run:
           name: Patch current version
           command: npm version patch
       - run:
