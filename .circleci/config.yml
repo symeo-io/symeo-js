@@ -29,6 +29,51 @@ jobs:
       - slack/notify:
           event: pass
           template: basic_success_1
+  test:
+    working_directory: ~/symeo-js
+    docker:
+      - image: cimg/node:16.16.0
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "~/symeo-js/yarn.lock" }}
+      - run:
+          name: Install dependencies
+          command: yarn install
+      - save_cache:
+          key: dependency-cache-{{ checksum "~/symeo-js/yarn.lock" }}
+          paths:
+            - node_modules
+      - run:
+          name: Test
+          command: yarn test
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: basic_success_1
+  version:
+    working_directory: ~/symeo-js
+    docker:
+      - image: cimg/node:16.16.0
+    steps:
+      - checkout
+      - run:
+          name: Patch current version
+          command: npm version patch
+      - run:
+          name: Git tag
+          command: git tag $(git log -1 --pretty=%B)
+      - run:
+          name: Git push
+          command: git push && git push origin $(git log -1 --pretty=%B)
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+      - slack/notify:
+          event: pass
+          template: basic_success_1
   publish:
     working_directory: ~/symeo-js
     docker:
@@ -59,18 +104,32 @@ jobs:
           template: basic_success_1
 
 workflows:
-  package:
+  ci:
     jobs:
       - lint:
           context:
             - slack-notifications
-      - publish:
+      - test:
+          context:
+            - slack-notifications
+      - version:
           requires:
             - lint
+            - test
+          context:
+            - slack-notifications
+          filters:
+            branches:
+              only:
+                - main
+  publish:
+    jobs:
+      - publish:
           context:
             - slack-notifications
             - github-packages
           filters:
             branches:
-              only:
-                - main
+              ignore: /.*/
+            tags:
+              only: /^[0-9]+\.[0-9]+\.[0-9]+$/
