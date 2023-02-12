@@ -1,9 +1,0 @@
-aws:
-  secretAccessKey:
-    type: string
-    optional: true
-  accessKeyId:
-    type: string
-    optional: true
-  region:
-    type: string
