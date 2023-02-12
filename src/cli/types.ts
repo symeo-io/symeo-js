@@ -1,8 +1,6 @@
-export type ConfigurationPropertyType =
-  | 'string'
-  | 'integer'
-  | 'float'
-  | 'boolean';
+export type ConfigurationContract = {
+  [property: string]: ConfigurationContract | ConfigurationProperty;
+};
 
 export type ConfigurationProperty = {
   type: ConfigurationPropertyType;
@@ -10,6 +8,8 @@ export type ConfigurationProperty = {
   optional?: boolean;
 };
 
-export type ConfigurationContract = {
-  [property: string]: ConfigurationContract | ConfigurationProperty;
-};
+export type ConfigurationPropertyType =
+  | 'string'
+  | 'integer'
+  | 'float'
+  | 'boolean';

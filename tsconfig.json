@@ -11,7 +11,8 @@
     "incremental": true,
     "exactOptionalPropertyTypes": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": "./"
   },
   "include": ["src/cli", "src/configuration", "tests"],
   "exclude": ["dist", "node_modules", "config"],
