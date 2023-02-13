@@ -1,1 +1,1 @@
-export type Config = unknown;
+export type Config = any;

@@ -11,6 +11,8 @@ import { ConfigLibraryGenerator } from './config-generator/config.library.genera
 
 export const LOCAL_CONFIGURATION_FILE_VARIABLE_NAME =
   'SYMEO_LOCAL_CONFIGURATION_FILE';
+export const CONFIGURATION_CONTRACT_FILE_VARIABLE_NAME =
+  'SYMEO_CONFIGURATION_CONTRACT_FILE';
 export const API_URL_VARIABLE_NAME = 'SYMEO_API_URL';
 export const API_KEY_VARIABLE_NAME = 'SYMEO_API_KEY';
 
@@ -44,6 +46,8 @@ export async function main() {
     );
 
     const commandEnvVariables: any = {};
+    commandEnvVariables[CONFIGURATION_CONTRACT_FILE_VARIABLE_NAME] =
+      cliArgs.configurationContractPath;
     if (!cliArgs.apiKey) {
       commandEnvVariables[LOCAL_CONFIGURATION_FILE_VARIABLE_NAME] =
         cliArgs.localConfigurationPath;
