@@ -53,37 +53,6 @@ jobs:
       - slack/notify:
           event: pass
           template: basic_success_1
-  version:
-    working_directory: ~/symeo-js
-    docker:
-      - image: cimg/node:16.16.0
-    environment:
-      GIT_COMMIT_MSG: git log --format=%B -n 1 $CIRCLE_SHA1
-    steps:
-      - checkout
-      - when:
-          condition:
-            not:
-              matches: { pattern: '^[0-9]+\.[0-9]+\.[0-9]+$', value: $GIT_COMMIT_MSG }
-          steps:
-            - run:
-                name: Configure git
-                command: git config user.email "ci@symeo.io" && git config user.name "Symeo CI"
-            - run:
-                name: Patch current version
-                command: npm version patch
-            - run:
-                name: Git tag
-                command: git tag $(git log -1 --pretty=%B)
-            - run:
-                name: Git push
-                command: git push --set-upstream origin main && git push origin $(git log -1 --pretty=%B)
-            - slack/notify:
-                event: fail
-                template: basic_fail_1
-            - slack/notify:
-                event: pass
-                template: basic_success_1
   publish:
     working_directory: ~/symeo-js
     docker:
@@ -114,7 +83,7 @@ jobs:
           template: basic_success_1
 
 workflows:
-  ci:
+  package:
     jobs:
       - lint:
           context:
@@ -122,24 +91,14 @@ workflows:
       - test:
           context:
             - slack-notifications
-      - version:
+      - publish:
           requires:
             - lint
             - test
           context:
             - slack-notifications
+            - github-packages
           filters:
             branches:
               only:
                 - main
-  publish:
-    jobs:
-      - publish:
-          context:
-            - slack-notifications
-            - github-packages
-          filters:
-            branches:
-              ignore: /.*/
-            tags:
-              only: /^[0-9]+\.[0-9]+\.[0-9]+$/
