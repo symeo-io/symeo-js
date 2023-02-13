@@ -1,12 +1,12 @@
-import { ConfigurationContract } from 'src/cli/types';
-import { ConfigLibraryGenerator } from 'src/cli/config-generator/config.library.generator';
 import checksum from 'checksum';
-import { ConfigTypesGenerator } from 'src/cli/config-generator/config.types.generator';
 import { anyString, anything, instance, mock, verify } from 'ts-mockito';
 import fsExtra from 'fs-extra';
-import { ConfigTranspiler } from 'src/cli/config-generator/config.transpiler';
 import { faker } from '@faker-js/faker';
 import SpyInstance = jest.SpyInstance;
+import { ConfigLibraryGenerator } from '../../../../src/cli/config-generator/config.library.generator';
+import { ConfigTypesGenerator } from '../../../../src/cli/config-generator/config.types.generator';
+import { ConfigTranspiler } from '../../../../src/cli/config-generator/config.transpiler';
+import { ConfigurationContract } from '../../../../src/cli/types';
 
 describe('ConfigLibrary', () => {
   describe('generateConfigLibrary', () => {
