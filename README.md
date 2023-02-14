@@ -79,13 +79,10 @@ with:
 
 Or, directly from the command line:
 
-```json
-{
-  "scripts": {
-    "start": "node_modules/.bin/symeo-js -- node dist/index.js"
-  }
-}
+```shell
+node_modules/.bin/symeo-js -- node dist/index.js
 ```
+
 
 ### Custom contract file
 
