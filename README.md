@@ -94,8 +94,8 @@ You can specify the path and name of the contract file and local file with the `
 ```json
 {
   "scripts": {
-    "start": "symeo-js -c config/symeo.config.yml -- node dist/index.js",
-    "test": "symeo-js -c config/symeo.config.yml -f config/symeo.test.yml -- jest"
+    "start": "symeo-js --contract-file config/symeo.config.yml -- node dist/index.js",
+    "test": "symeo-js --contract-file config/symeo.config.yml --values-file config/symeo.test.yml -- jest"
   }
 }
 ```
@@ -139,7 +139,8 @@ $ symeo-js -k $YOUR_ENVIRONMENT_API_KEY -- node index.js
 Or, directly from the command line:
 
 ```shell
-$ node_modules/.bin/symeo-js -k $YOUR_ENVIRONMENT_API_KEY -- node index.js
+$ node_modules/.bin/symeo-js --api-key
+ $YOUR_ENVIRONMENT_API_KEY -- node index.js
 ```
 
 So the sdk fetch the values for the given environment and starts your application with those values.
