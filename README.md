@@ -6,12 +6,12 @@ The Symeo SDK made for interacting with your Symeo secrets and configuration fro
 
 NPM
 ```shell
-$ npm install symeo-js --save 
+npm install symeo-js --save 
 ```
 
 Yarn
 ```shell
-$ yarn add symeo-js
+yarn add symeo-js
 ```
 
 # Usage
@@ -136,13 +136,13 @@ export class DatabaseClient {
 After creating an environment and its api key in the [Symeo platform](https://app-config-staging.symeo.io/), use this command in your package.json
 
 ```shell
-$ symeo-js -k $YOUR_ENVIRONMENT_API_KEY -- node index.js
+symeo-js -k $YOUR_ENVIRONMENT_API_KEY -- node index.js
 ```
 
 Or, directly from the command line:
 
 ```shell
-$ node_modules/.bin/symeo-js --api-key $YOUR_ENVIRONMENT_API_KEY -- node index.js
+node_modules/.bin/symeo-js --api-key $YOUR_ENVIRONMENT_API_KEY -- node index.js
 ```
 
 So the sdk fetch the values for the given environment and starts your application with those values.
