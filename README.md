@@ -139,8 +139,7 @@ $ symeo-js -k $YOUR_ENVIRONMENT_API_KEY -- node index.js
 Or, directly from the command line:
 
 ```shell
-$ node_modules/.bin/symeo-js --api-key
- $YOUR_ENVIRONMENT_API_KEY -- node index.js
+$ node_modules/.bin/symeo-js --api-key $YOUR_ENVIRONMENT_API_KEY -- node index.js
 ```
 
 So the sdk fetch the values for the given environment and starts your application with those values.
