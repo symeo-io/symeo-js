@@ -77,6 +77,16 @@ with:
 }
 ```
 
+Or, directly from the command line:
+
+```json
+{
+  "scripts": {
+    "start": "node_modules/.bin/symeo-js -- node dist/index.js"
+  }
+}
+```
+
 ### Custom contract file
 
 You can specify the path and name of the contract file and local file with the `-c` and `-f` flags:
@@ -95,13 +105,13 @@ You can specify the path and name of the contract file and local file with the `
 Your configuration is then accessible with the import:
 
 ```typescript
-import { config } from 'symeo/config';
+import { config } from 'symeo-js/config';
 ```
 
 For example:
 
 ```typescript
-import { config } from 'symeo/config';
+import { config } from 'symeo-js/config';
 import { Client } from "postgres";
 
 export class DatabaseClient {
@@ -120,10 +130,16 @@ export class DatabaseClient {
 
 ## Start application with configuration from Symeo platform
 
-After creating an environment and its api key in the [Symeo platform](https://app-config-staging.symeo.io/), run
+After creating an environment and its api key in the [Symeo platform](https://app-config-staging.symeo.io/), use this command in your package.json
 
 ```shell
-$ symeo -k $YOUR_ENVIRONMENT_API_KEY -- node index.js
+$ symeo-js -k $YOUR_ENVIRONMENT_API_KEY -- node index.js
+```
+
+Or, directly from the command line:
+
+```shell
+$ node_modules/.bin/symeo-js -k $YOUR_ENVIRONMENT_API_KEY -- node index.js
 ```
 
 So the sdk fetch the values for the given environment and starts your application with those values.
