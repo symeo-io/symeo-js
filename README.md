@@ -18,8 +18,9 @@ yarn add symeo-js
 
 ## Define configuration contract
 
-Create a `symeo.config.yml` file in the root of your project, and define the structure and types of your application configuration:
+Create a `symeo.config.yml` file in the root of your project, and define the structure and types of your application configuration.
 
+For example:
 ```yaml
 aws:
   region:
@@ -43,8 +44,9 @@ aws:
 
 ## Create your local configuration file
 
-Create a `symeo.local.yml` file in the root of your project, defining the values matching your configuration contract:
+Create a `symeo.local.yml` file in the root of your project, defining the values matching your configuration contract.
 
+For example:
 ```yaml
 aws:
   region: "eu-west-3"
