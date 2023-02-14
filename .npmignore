@@ -1,6 +1,8 @@
 .circleci/
 src/
 tests/
+coverage/
+.idea/
 .eslintrc.js
 .npmignore
 .prettierrc
@@ -8,3 +10,5 @@ tsconfig.build.cli.json
 tsconfig.build.config.json
 tsconfig.json
 yarn.lock
+symeo.config.yml
+jest.config.js

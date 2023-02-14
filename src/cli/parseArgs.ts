@@ -35,7 +35,7 @@ export function parseArgs({
     DEFAULT_API_URL,
   );
   program.option(
-    '-f, --local-file <file>',
+    '-f, --values-file <file>',
     'Local configuration file',
     DEFAULT_LOCAL_CONFIGURATION_PATH,
   );

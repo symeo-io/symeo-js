@@ -1,17 +1,18 @@
 {
-  "name": "@symeo-io/symeo",
+  "name": "symeo-js",
   "repository": "https://github.com/symeo-io/symeo-js",
-  "version": "0.0.14",
+  "version": "0.0.2",
   "main": "dist/cli.ts",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "bin": {
-    "symeo": "./dist/cli.js"
+    "symeo-js": "./dist/cli.js"
   },
   "scripts": {
     "lint": "eslint \"src/**/*.ts\" --fix",
     "lint:fix": "eslint \"src/**/*.ts\"",
     "build:cli": "tsc --build ./tsconfig.build.cli.json --force",
     "build:config": "tsc --build ./tsconfig.build.config.json --force",
+    "build": "yarn build:cli && yarn build:config",
     "test": "jest --verbose"
   },
   "dependencies": {
