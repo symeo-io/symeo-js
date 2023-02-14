@@ -69,9 +69,7 @@ jobs:
           command: yarn build:cli && yarn build:config
       - run:
           name: Authenticate to registry
-          command: |
-            echo "@symeo-io:registry=https://npm.pkg.github.com" > ~/symeo-js/.npmrc
-            echo "//npm.pkg.github.com/:_authToken=${GITHUB_PACKAGES_TOKEN}" >> ~/symeo-js/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ~/symeo-js/.npmrc
       - run:
           name: Publish
           command: npm publish
@@ -97,7 +95,7 @@ workflows:
             - test
           context:
             - slack-notifications
-            - github-packages
+            - npm
           filters:
             branches:
               only:
