@@ -12,8 +12,8 @@
     "lint:fix": "eslint \"src/**/*.ts\"",
     "build:cli": "tsc --build ./tsconfig.build.cli.json --force",
     "build:config": "tsc --build ./tsconfig.build.config.json --force",
-    "test": "jest"
-    "build": "yarn build:cli && yarn build:config",
+    "test": "jest",
+    "build": "yarn build:cli && yarn build:config"
   },
   "dependencies": {
     "chalk": "^4.1.2",
