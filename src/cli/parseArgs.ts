@@ -53,7 +53,7 @@ export function parseArgs({
 
   return {
     configurationContractPath: joinPaths({ cwd, path: rawOpts.contractFile }),
-    localConfigurationPath: joinPaths({ cwd, path: rawOpts.localFile }),
+    localConfigurationPath: joinPaths({ cwd, path: rawOpts.valuesFile }),
     apiUrl: rawOpts.apiUrl,
     apiKey: rawOpts.apiKey,
     forceRecreate: rawOpts.forceRecreate,
