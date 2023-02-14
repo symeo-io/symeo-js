@@ -6,12 +6,12 @@ The Symeo SDK made for interacting with your Symeo secrets and configuration fro
 
 NPM
 ```shell
-$ npm install @symeo-io/symeo --save 
+$ npm install symeo-js --save 
 ```
 
 Yarn
 ```shell
-$ yarn add @symeo-io/symeo 
+$ yarn add symeo-js
 ```
 
 # Usage
@@ -72,7 +72,7 @@ with:
 ```json
 {
   "scripts": {
-    "start": "symeo -- node dist/index.js"
+    "start": "symeo-js -- node dist/index.js"
   }
 }
 ```
@@ -84,8 +84,8 @@ You can specify the path and name of the contract file and local file with the `
 ```json
 {
   "scripts": {
-    "start": "symeo -c config/symeo.config.yml -- node dist/index.js",
-    "test": "symeo -c config/symeo.config.yml -f config/symeo.test.yml -- jest"
+    "start": "symeo-js -c config/symeo.config.yml -- node dist/index.js",
+    "test": "symeo-js -c config/symeo.config.yml -f config/symeo.test.yml -- jest"
   }
 }
 ```
@@ -95,13 +95,13 @@ You can specify the path and name of the contract file and local file with the `
 Your configuration is then accessible with the import:
 
 ```typescript
-import { config } from '@symeo-io/symeo/config';
+import { config } from 'symeo/config';
 ```
 
 For example:
 
 ```typescript
-import { config } from '@symeo-io/symeo/config';
+import { config } from 'symeo/config';
 import { Client } from "postgres";
 
 export class DatabaseClient {
