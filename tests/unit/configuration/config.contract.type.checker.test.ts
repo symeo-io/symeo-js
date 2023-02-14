@@ -1,11 +1,11 @@
-import { ConfigContractLoader } from '../../../src/configuration/config.contract.loader';
 import { dir } from 'tmp-promise';
 import { join } from 'path';
-import { ConfigContractTypeChecker } from '../../../config/config.contract.type.checker';
-import { Config } from '../../../config/types';
 import YAML from 'yamljs';
 import fsExtra from 'fs-extra';
 import { faker } from '@faker-js/faker';
+import { ConfigContractLoader } from 'src/configuration/config.contract.loader';
+import { ConfigContractTypeChecker } from 'src/configuration/config.contract.type.checker';
+import { Config } from 'src/configuration/types';
 
 describe('ConfigContractTypeChecker', () => {
   describe('checkContractTypeCompatibility', () => {

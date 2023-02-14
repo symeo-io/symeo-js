@@ -2,8 +2,8 @@ import { join } from 'path';
 import fsExtra from 'fs-extra';
 import SpyInstance = jest.SpyInstance;
 import { dir } from 'tmp-promise';
-import { ConfigTypesGenerator } from '../../../../src/cli/config-generator/config.types.generator';
-import { ConfigurationPropertyType } from '../../../../src/cli/config.contract';
+import { ConfigTypesGenerator } from 'src/cli/config-generator/config.types.generator';
+import { ConfigurationPropertyType } from 'src/cli/config.contract';
 
 describe('ConfigTypes', () => {
   describe('generateTypesFile', () => {

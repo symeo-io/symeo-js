@@ -2,6 +2,7 @@
 /dist
 /config
 /node_modules
+/src/config
 
 # Logs
 logs
