@@ -1,4 +1,7 @@
-import { ConfigurationContract, ConfigurationProperty } from '../types';
+import {
+  ConfigurationContract,
+  ConfigurationProperty,
+} from '../config.contract';
 import { join } from 'path';
 import fsExtra from 'fs-extra';
 
@@ -7,7 +10,7 @@ export class ConfigTypesGenerator {
     path: string,
     configFormat: ConfigurationContract,
   ) {
-    const typesOutputPath = join(path, './types.ts');
+    const typesOutputPath = join(path, './config.contract.ts');
 
     const types = `export type Config = ${this.configFormatToTypeScriptType(
       configFormat,

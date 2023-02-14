@@ -1,5 +1,5 @@
 import YAML from 'yamljs';
-import { ConfigurationContract } from '../types';
+import { ConfigurationContract } from '../config.contract';
 import fs from 'fs';
 
 export class ConfigContractLoader {

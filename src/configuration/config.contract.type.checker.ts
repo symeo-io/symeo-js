@@ -7,15 +7,19 @@ import { ConfigContractLoader } from './config.contract.loader';
 
 export class ConfigContractTypeChecker {
   constructor(private configContractLoader: ConfigContractLoader) {}
-  checkContractTypeCompatibility(configContractPath: string, config: Config) {
+
+  public checkContractTypeCompatibility(
+    configContractPath: string,
+    config: Config,
+  ) {
     const configContract =
       this.configContractLoader.loadConfigFormatFile(configContractPath);
-    this.compareConfigContractAndConfig(configContract, config as any);
+    this.compareConfigContractAndConfig(configContract, config);
   }
 
   private compareConfigContractAndConfig(
     configContract: ConfigurationContract,
-    config: any,
+    config: Config,
   ) {
     Object.keys(configContract).forEach((propertyName) => {
       const contractProperty = configContract[propertyName];
@@ -40,7 +44,7 @@ export class ConfigContractTypeChecker {
             )
           ) {
             throw new Error(
-              `Config property ${configProperty} has type: ${typeof configProperty} while configuration contract defined ${configProperty} as ${
+              `Config property ${propertyName} has type '${typeof configProperty}' while configuration contract defined ${propertyName} as ${
                 contractProperty.type
               }.`,
             );

@@ -6,7 +6,7 @@ import SpyInstance = jest.SpyInstance;
 import { ConfigLibraryGenerator } from '../../../../src/cli/config-generator/config.library.generator';
 import { ConfigTypesGenerator } from '../../../../src/cli/config-generator/config.types.generator';
 import { ConfigTranspiler } from '../../../../src/cli/config-generator/config.transpiler';
-import { ConfigurationContract } from '../../../../src/cli/types';
+import { ConfigurationContract } from '../../../../src/cli/config.contract';
 
 describe('ConfigLibrary', () => {
   describe('generateConfigLibrary', () => {

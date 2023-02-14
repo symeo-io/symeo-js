@@ -3,7 +3,7 @@ import fsExtra from 'fs-extra';
 import SpyInstance = jest.SpyInstance;
 import { dir } from 'tmp-promise';
 import { ConfigTypesGenerator } from '../../../../src/cli/config-generator/config.types.generator';
-import { ConfigurationPropertyType } from '../../../../src/cli/types';
+import { ConfigurationPropertyType } from '../../../../src/cli/config.contract';
 
 describe('ConfigTypes', () => {
   describe('generateTypesFile', () => {
@@ -13,13 +13,16 @@ describe('ConfigTypes', () => {
 
     beforeEach(async () => {
       mockTypesOutputPath = (await dir({ prefix: 'symeo-test' })).path;
-      fsExtra.writeFile(join(mockTypesOutputPath, './types.ts'), '');
+      await fsExtra.writeFile(
+        join(mockTypesOutputPath, './config.contract.ts'),
+        '',
+      );
       mockWriteFile = jest.spyOn(fsExtra, 'writeFile');
     });
 
     afterEach(() => {
       mockWriteFile.mockRestore();
-      fsExtra.unlinkSync(join(mockTypesOutputPath, './types.ts'));
+      fsExtra.unlinkSync(join(mockTypesOutputPath, './config.contract.ts'));
     });
 
     it('should return empty typescript type file for empty configuration contract', () => {
@@ -34,7 +37,7 @@ describe('ConfigTypes', () => {
 
       // Then
       expect(mockWriteFile).toBeCalledWith(
-        join(mockTypesOutputPath, './types.ts'),
+        join(mockTypesOutputPath, './config.contract.ts'),
         expectedTypes,
       );
     });
@@ -63,7 +66,7 @@ describe('ConfigTypes', () => {
 
       // Then
       expect(mockWriteFile).toBeCalledWith(
-        join(mockTypesOutputPath, './types.ts'),
+        join(mockTypesOutputPath, './config.contract.ts'),
         expectedTypes,
       );
     });
@@ -111,7 +114,7 @@ describe('ConfigTypes', () => {
 
       // Then
       expect(mockWriteFile).toBeCalledWith(
-        join(mockTypesOutputPath, './types.ts'),
+        join(mockTypesOutputPath, './config.contract.ts'),
         expectedTypes,
       );
     });
