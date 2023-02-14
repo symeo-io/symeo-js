@@ -6,8 +6,6 @@ import { Config } from '../../../config/types';
 import YAML from 'yamljs';
 import fsExtra from 'fs-extra';
 import { faker } from '@faker-js/faker';
-import any = jasmine.any;
-import { anything } from 'ts-mockito';
 
 describe('ConfigContractTypeChecker', () => {
   describe('checkContractTypeCompatibility', () => {
