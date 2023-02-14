@@ -108,6 +108,12 @@ Your configuration is then accessible with the import:
 import { config } from 'symeo-js/config';
 ```
 
+Or using require:
+
+```javascript
+const { config } = require('symeo-js/config');
+```
+
 For example:
 
 ```typescript
