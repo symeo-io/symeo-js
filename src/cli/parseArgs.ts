@@ -35,7 +35,7 @@ export function parseArgs({
     DEFAULT_API_URL,
   );
   program.option(
-    '-f, --local-file <file>',
+    '-f, --values-file <file>',
     'Local configuration file',
     DEFAULT_LOCAL_CONFIGURATION_PATH,
   );
@@ -53,7 +53,7 @@ export function parseArgs({
 
   return {
     configurationContractPath: joinPaths({ cwd, path: rawOpts.contractFile }),
-    localConfigurationPath: joinPaths({ cwd, path: rawOpts.localFile }),
+    localConfigurationPath: joinPaths({ cwd, path: rawOpts.valuesFile }),
     apiUrl: rawOpts.apiUrl,
     apiKey: rawOpts.apiKey,
     forceRecreate: rawOpts.forceRecreate,
