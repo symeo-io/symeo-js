@@ -44,19 +44,6 @@ database:
 - Supported types are `boolean`, `string`, `integer` and `float`
 - Properties can be flagged with `optional: true`, or `secret: true`
 
-### Create your local configuration file
-
-Create a `symeo.local.yml` file in the root of your project, defining the values matching your configuration contract.
-
-For example:
-```yaml
-database:
-  host: "localhost"
-  port: 5432
-  username: "postgres"
-  password: "XPJc5qAbQcn77GWg"
-```
-
 ### Build your configuration to access it in your code
 
 You can add a build configuration command to your package.json:
@@ -103,6 +90,19 @@ export class DatabaseClient {
     })
   }
 }
+```
+
+### Create your local configuration file
+
+Create a `symeo.local.yml` file in the root of your project, defining the values matching your configuration contract.
+
+For example:
+```yaml
+database:
+  host: "localhost"
+  port: 5432
+  username: "postgres"
+  password: "XPJc5qAbQcn77GWg"
 ```
 
 ### Wrap your application startup with the symeo command
@@ -165,7 +165,7 @@ The path to your local values file. Default is `symeo.local.yml`.
 
 ### `-k, --api-key`
 
-The environment api key to use to fetch values from Symeo platform. If specified, parameter `-f, --values-file` is ignored.
+The environment api key to use to fetch values from Symeo platform. If empty, values will be fetched from local value file (`symeo.local.yml` by default). If specified, parameter `-f, --values-file` is ignored.
 
 ### `-a, --api-url`
 
@@ -173,4 +173,4 @@ The api endpoint used to fetch your configuration with the api key. Default is `
 
 ### `-r, --force-recreate`
 
-By default, is contract stays identical, configuration won't be rebuilt to save time. Passing this option will force the rebuild of your configuration.
+By default, if contract stays identical, configuration won't be rebuilt to save time. Passing this option will force the rebuild of your configuration.
