@@ -2,7 +2,13 @@
 
 The Symeo SDK made for interacting with your Symeo secrets and configuration from JavaScript or TypeScript applications.
 
-# Install
+## Table of Contents
+
+- [Install](#install)
+- [Usage](#usage)
+- [Symeo CLI options](#symeo-cli-options)
+
+## Install
 
 NPM
 ```shell
@@ -14,9 +20,9 @@ Yarn
 yarn add symeo-js
 ```
 
-# Usage
+## Usage
 
-## Define configuration contract
+### Define configuration contract
 
 Create a `symeo.config.yml` file in the root of your project, and define the structure and types of your application configuration.
 
@@ -38,7 +44,7 @@ database:
 - Supported types are `boolean`, `string`, `integer` and `float`
 - Properties can be flagged with `optional: true`, or `secret: true`
 
-## Create your local configuration file
+### Create your local configuration file
 
 Create a `symeo.local.yml` file in the root of your project, defining the values matching your configuration contract.
 
@@ -51,7 +57,7 @@ database:
   password: "XPJc5qAbQcn77GWg"
 ```
 
-## Build your configuration to access it in your code
+### Build your configuration to access it in your code
 
 You can add a build configuration command to your package.json:
 
@@ -65,7 +71,7 @@ You can add a build configuration command to your package.json:
 
 And then run `npm run build:config` or `yarn build:config`
 
-## Use your configuration anywhere in your code
+### Use your configuration anywhere in your code
 
 Your configuration is then accessible with the import:
 
@@ -99,7 +105,7 @@ export class DatabaseClient {
 }
 ```
 
-## Wrap your application startup with the symeo command
+### Wrap your application startup with the symeo command
 
 This will trigger the rebuild of you configuration at each statup and inject values into your runtime.
 
@@ -129,7 +135,7 @@ Or, directly from the command line:
 node_modules/.bin/symeo-js -- node dist/index.js
 ```
 
-## Start application with configuration from Symeo platform
+### Start application with configuration from Symeo platform
 
 After creating an environment and its api key in the [Symeo platform](https://app-config-staging.symeo.io/), use this command in your package.json
 
@@ -147,24 +153,24 @@ So the sdk fetch the values for the given environment and starts your applicatio
 
 Follow the [Symeo platform documentation](https://symeo.io/) for more details.
 
-### Symeo CLI options
+## Symeo CLI options
 
-#### `-c, --contract-file`
+### `-c, --contract-file`
 
 The path to your configuration contract file. Default is `symeo.config.yml`.
 
-#### `-f, --values-file`
+### `-f, --values-file`
 
 The path to your local values file. Default is `symeo.local.yml`.
 
-#### `-k, --api-key`
+### `-k, --api-key`
 
 The environment api key to use to fetch values from Symeo platform. If specified, parameter `-f, --values-file` is ignored.
 
-#### `-a, --api-url`
+### `-a, --api-url`
 
 The api endpoint used to fetch your configuration with the api key. Default is `https://api.symeo.io/api/v1/values`.
 
-#### `-r, --force-recreate`
+### `-r, --force-recreate`
 
 By default, is contract stays identical, configuration won't be rebuilt to save time. Passing this option will force the rebuild of your configuration.
