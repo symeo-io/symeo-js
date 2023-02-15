@@ -63,6 +63,8 @@ You can add a build configuration command to your package.json:
 }
 ```
 
+And then run `npm run build:config` or `yarn build:config`
+
 ## Use your configuration anywhere in your code
 
 Your configuration is then accessible with the import:
