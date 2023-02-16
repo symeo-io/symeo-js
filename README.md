@@ -83,10 +83,10 @@ export class DatabaseClient {
 
   constructor() {
     this.client = new Client({
-      host: config.aws.database.host,
-      port: config.aws.database.port,
-      username: config.aws.database.username,
-      password: config.aws.database.password,
+      host: config.database.host,
+      port: config.database.port,
+      username: config.database.username,
+      password: config.database.password,
     })
   }
 }
@@ -140,7 +140,7 @@ node_modules/.bin/symeo-js -- node dist/index.js
 After creating an environment and its api key in the [Symeo platform](https://app-config-staging.symeo.io/), use this command in your package.json
 
 ```shell
-symeo-js -k $YOUR_ENVIRONMENT_API_KEY -- node index.js
+symeo-js --api-key $YOUR_ENVIRONMENT_API_KEY -- node index.js
 ```
 
 Or, directly from the command line:
