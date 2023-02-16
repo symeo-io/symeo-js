@@ -137,7 +137,7 @@ node_modules/.bin/symeo-js -- node dist/index.js
 
 ### Start application with configuration from Symeo platform
 
-After creating an environment and its api key in the [Symeo platform](https://app-config-staging.symeo.io/), use this command in your package.json
+After creating an environment and its api key in the [Symeo platform](https://app-staging.symeo.io/), use this command in your package.json
 
 ```shell
 symeo-js --api-key $YOUR_ENVIRONMENT_API_KEY -- node index.js
