@@ -10,7 +10,7 @@ export class ConfigTypesGenerator {
     path: string,
     configFormat: ConfigurationContract,
   ) {
-    const typesOutputPath = join(path, './config.contract.ts');
+    const typesOutputPath = join(path, './types.ts');
 
     const types = `export type Config = ${this.configFormatToTypeScriptType(
       configFormat,

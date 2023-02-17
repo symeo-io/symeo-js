@@ -6,13 +6,19 @@ import { faker } from '@faker-js/faker';
 import { ConfigContractLoader } from 'src/configuration/config.contract.loader';
 import { ConfigContractTypeChecker } from 'src/configuration/config.contract.type.checker';
 import { Config } from 'src/configuration/types';
+import SpyInstance = jest.SpyInstance;
+import { ConfigContractTypeCheckerError } from '../../../src/configuration/config.contract.type.checker.error';
 
 describe('ConfigContractTypeChecker', () => {
   describe('checkContractTypeCompatibility', () => {
     let tmpDirectoryPath: string;
     let tmpConfigContractPath: string;
     let configContractLoader: ConfigContractLoader;
+    let configContractTypeCheckerError: ConfigContractTypeCheckerError;
     let configContractTypeChecker: ConfigContractTypeChecker;
+
+    let mockedProcessExit: SpyInstance;
+    let configContractTypeCheckerErrorSpy: SpyInstance;
 
     const configContract = {
       database: {
@@ -45,14 +51,33 @@ describe('ConfigContractTypeChecker', () => {
       tmpConfigContractPath = join(tmpDirectoryPath, './test.config.yml');
 
       configContractLoader = new ConfigContractLoader();
+
+      configContractTypeCheckerError = new ConfigContractTypeCheckerError();
+
       configContractTypeChecker = new ConfigContractTypeChecker(
         configContractLoader,
+        configContractTypeCheckerError,
       );
+
+      jest.spyOn(console, 'error').mockImplementation();
+
+      mockedProcessExit = jest
+        .spyOn(process, 'exit')
+        .mockImplementation((code) => {
+          throw new Error('process exit: ' + code);
+        });
+
+      configContractTypeCheckerErrorSpy = jest.spyOn(
+        configContractTypeCheckerError,
+        'checkErrors',
+      );
+
       const yamlConfigContract = YAML.stringify(configContract, 6);
       fsExtra.writeFileSync(tmpConfigContractPath, yamlConfigContract);
     });
 
     afterEach(() => {
+      mockedProcessExit.mockRestore();
       fsExtra.unlinkSync(tmpConfigContractPath);
     });
 
@@ -68,7 +93,9 @@ describe('ConfigContractTypeChecker', () => {
           config,
         );
       }).toThrow(
-        new Error('Missing config format file at ' + wrongConfigContractPath),
+        new Error(
+          'Missing configuration format file at ' + wrongConfigContractPath,
+        ),
       );
     });
 
@@ -94,11 +121,10 @@ describe('ConfigContractTypeChecker', () => {
           tmpConfigContractPath,
           config,
         );
-      }).toThrow(
-        new Error(
-          `The property ${badNamedProperty} of your configuration contract is missing in your config file.`,
-        ),
-      );
+      }).toThrowError();
+      expect(configContractTypeCheckerErrorSpy).toBeCalledWith([
+        `The property "${badNamedProperty}" of your configuration contract is missing in your configuration values.`,
+      ]);
     });
 
     it('should throw new error for missing config property value not mark as optional', () => {
@@ -123,11 +149,10 @@ describe('ConfigContractTypeChecker', () => {
           tmpConfigContractPath,
           config,
         );
-      }).toThrow(
-        new Error(
-          `The property ${missingPropertyValueNotOptional} of your configuration contract is missing in your config file.`,
-        ),
-      );
+      }).toThrowError();
+      expect(configContractTypeCheckerErrorSpy).toBeCalledWith([
+        `The property "${missingPropertyValueNotOptional}" of your configuration contract is missing in your configuration values.`,
+      ]);
     });
 
     it('should throw new error for config property value which has different type from contract', () => {
@@ -154,13 +179,12 @@ describe('ConfigContractTypeChecker', () => {
           tmpConfigContractPath,
           config,
         );
-      }).toThrow(
-        new Error(
-          `Config property ${wrongTypeProperty} has type '${typeof wrongTypeFaker}' while configuration contract defined ${wrongTypeProperty} as ${
-            configContract.database.responseLimit.type
-          }.`,
-        ),
-      );
+      }).toThrowError();
+      expect(configContractTypeCheckerErrorSpy).toBeCalledWith([
+        `Configuration property "${wrongTypeProperty}" has type "${typeof wrongTypeFaker}" while configuration contract defined "${wrongTypeProperty}" as "${
+          configContract.database.responseLimit.type
+        }".`,
+      ]);
     });
 
     it('should not throw any error for type verification', () => {

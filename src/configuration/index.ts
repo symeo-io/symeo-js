@@ -3,11 +3,18 @@ import { Config } from './types';
 import fetch from 'sync-fetch';
 import { ConfigContractTypeChecker } from './config.contract.type.checker';
 import { ConfigContractLoader } from './config.contract.loader';
+import { ConfigContractTypeCheckerError } from './config.contract.type.checker.error';
+import ora from 'ora';
 
 let config: Config;
 const configContractLoader: ConfigContractLoader = new ConfigContractLoader();
+const configContractTypeCheckerError: ConfigContractTypeCheckerError =
+  new ConfigContractTypeCheckerError();
 const configContractTypeChecker: ConfigContractTypeChecker =
-  new ConfigContractTypeChecker(configContractLoader);
+  new ConfigContractTypeChecker(
+    configContractLoader,
+    configContractTypeCheckerError,
+  );
 const apiUrl = process.env.SYMEO_API_URL;
 const apiKey = process.env.SYMEO_API_KEY;
 const localConfigFilePath = process.env.SYMEO_LOCAL_CONFIGURATION_FILE;
@@ -35,15 +42,21 @@ if (apiUrl && apiKey) {
   process.exit(1);
 }
 
-if (configContractPath) {
-  configContractTypeChecker.checkContractTypeCompatibility(
-    configContractPath,
-    config,
-  );
-} else {
+if (!configContractPath) {
   console.error(
     'Missing config format file path. Are you sure you defined a configuration contract file path ? E.g ./symeo.config.yml',
   );
+  process.exit(1);
+}
+
+configContractTypeChecker.checkContractTypeCompatibility(
+  configContractPath,
+  config,
+);
+
+async function spin<T>(text: string, promise: Promise<T>): Promise<T> {
+  ora.promise(promise, { text, spinner: 'dots3', color: 'magenta' });
+  return await promise;
 }
 
 export { config };

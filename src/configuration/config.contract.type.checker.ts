@@ -4,9 +4,13 @@ import {
   ConfigurationProperty,
 } from './config.contract';
 import { ConfigContractLoader } from './config.contract.loader';
+import { ConfigContractTypeCheckerError } from './config.contract.type.checker.error';
 
 export class ConfigContractTypeChecker {
-  constructor(private configContractLoader: ConfigContractLoader) {}
+  constructor(
+    private configContractLoader: ConfigContractLoader,
+    private configContractTypeCheckerError: ConfigContractTypeCheckerError,
+  ) {}
 
   public checkContractTypeCompatibility(
     configContractPath: string,
@@ -14,14 +18,16 @@ export class ConfigContractTypeChecker {
   ) {
     const configContract =
       this.configContractLoader.loadConfigFormatFile(configContractPath);
-    this.compareConfigContractAndConfig(configContract, config);
+    this.compareConfigContractAndConfigValuesTypes(configContract, config);
   }
 
-  private compareConfigContractAndConfig(
+  private compareConfigContractAndConfigValuesTypes(
     configContract: ConfigurationContract,
     config: Config,
   ) {
     Object.keys(configContract).forEach((propertyName) => {
+      let errors: string[] = [];
+
       const contractProperty = configContract[propertyName];
       const configProperty = config[propertyName];
 
@@ -32,9 +38,11 @@ export class ConfigContractTypeChecker {
               contractProperty as ConfigurationProperty,
             )
           ) {
-            throw new Error(
-              `The property ${propertyName} of your configuration contract is missing in your config file.`,
-            );
+            errors =
+              this.configContractTypeCheckerError.addMissingPropertyError(
+                errors,
+                propertyName,
+              );
           }
         } else {
           if (
@@ -43,21 +51,25 @@ export class ConfigContractTypeChecker {
               configProperty,
             )
           ) {
-            throw new Error(
-              `Config property ${propertyName} has type '${typeof configProperty}' while configuration contract defined ${propertyName} as ${
-                contractProperty.type
-              }.`,
+            errors = this.configContractTypeCheckerError.addWrongTypeError(
+              errors,
+              propertyName,
+              contractProperty,
+              configProperty,
             );
           }
         }
+        this.configContractTypeCheckerError.checkErrors(errors);
       } else {
         if (!configProperty) {
-          throw new Error(
-            `The property ${propertyName} of your configuration contract is missing in your config file.`,
+          errors = this.configContractTypeCheckerError.addMissingPropertyError(
+            errors,
+            propertyName,
           );
         }
+        this.configContractTypeCheckerError.checkErrors(errors);
 
-        this.compareConfigContractAndConfig(
+        this.compareConfigContractAndConfigValuesTypes(
           contractProperty as ConfigurationContract,
           configProperty,
         );
