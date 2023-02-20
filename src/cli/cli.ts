@@ -4,9 +4,9 @@ import chalk from 'chalk';
 import ora from 'ora';
 import spawn from 'cross-spawn';
 import { parseArgs } from './parseArgs';
-import { ConfigContractLoader } from './config-generator/ConfigContractLoader';
+import { ContractLoader } from 'src/cli/config-generator/ContractLoader';
 import { ConfigTypesGenerator } from './config-generator/ConfigTypesGenerator';
-import { ConfigTranspiler } from './config-generator/ConfigTranspiler';
+import { TypeScriptTranspiler } from 'src/cli/config-generator/TypeScriptTranspiler';
 import { ConfigLibraryGenerator } from './config-generator/ConfigLibraryGenerator';
 
 export const LOCAL_CONFIGURATION_FILE_VARIABLE_NAME =
@@ -18,21 +18,21 @@ export const API_KEY_VARIABLE_NAME = 'SYMEO_API_KEY';
 
 export async function main() {
   const configTypesGenerator: ConfigTypesGenerator = new ConfigTypesGenerator();
-  const configTranspiler: ConfigTranspiler = new ConfigTranspiler();
+  const configTranspiler: TypeScriptTranspiler = new TypeScriptTranspiler();
   const configLibraryGenerator: ConfigLibraryGenerator =
     new ConfigLibraryGenerator(configTypesGenerator, configTranspiler);
-  const configContractLoader: ConfigContractLoader = new ConfigContractLoader();
+  const configContractLoader: ContractLoader = new ContractLoader();
 
   const cwd = process.cwd();
 
   try {
     const cliArgs = parseArgs({ argv: process.argv, cwd });
 
-    const configFormat = configContractLoader.loadConfigFormatFile(
+    const contract = configContractLoader.loadContractFile(
       cliArgs.configurationContractPath,
     );
     console.log(
-      `Loaded config format from ${chalk.green(
+      `Loaded configuration contract from ${chalk.green(
         cliArgs.configurationContractPath,
       )}`,
     );
@@ -40,7 +40,7 @@ export async function main() {
     await spin(
       'Generating config',
       configLibraryGenerator.generateConfigLibrary(
-        configFormat,
+        contract,
         cliArgs.forceRecreate,
       ),
     );

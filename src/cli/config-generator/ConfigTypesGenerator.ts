@@ -8,20 +8,18 @@ import fsExtra from 'fs-extra';
 export class ConfigTypesGenerator {
   public async generateTypesFile(
     path: string,
-    configFormat: ConfigurationContract,
+    contract: ConfigurationContract,
   ) {
     const typesOutputPath = join(path, './types.ts');
 
-    const types = `export type Config = ${this.configFormatToTypeScriptType(
-      configFormat,
+    const types = `export type Config = ${this.contractToTypeScriptType(
+      contract,
     )};`;
 
     await fsExtra.writeFile(typesOutputPath, types);
   }
 
-  private configFormatToTypeScriptType(
-    contract: ConfigurationContract,
-  ): string {
+  private contractToTypeScriptType(contract: ConfigurationContract): string {
     let result = '{\n';
 
     Object.keys(contract).forEach((propertyName) => {
@@ -33,7 +31,7 @@ export class ConfigTypesGenerator {
 
       const body = this.isConfigProperty(property)
         ? this.configPropertyToTypeScriptType(property as ConfigurationProperty)
-        : this.configFormatToTypeScriptType(property as ConfigurationContract);
+        : this.contractToTypeScriptType(property as ConfigurationContract);
 
       result += `${propertyTypeName}: ${body};\n`;
     });

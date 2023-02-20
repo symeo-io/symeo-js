@@ -2,11 +2,11 @@ import YAML from 'yamljs';
 import { Config } from './types';
 import fetch from 'sync-fetch';
 import { ConfigContractTypeChecker } from './ConfigContractTypeChecker';
-import { ConfigContractLoader } from './ConfigContractLoader';
+import { ContractLoader } from 'src/configuration/ContractLoader';
 import chalk from 'chalk';
 
 let config: Config;
-const configContractLoader: ConfigContractLoader = new ConfigContractLoader();
+const configContractLoader: ContractLoader = new ContractLoader();
 const configContractTypeChecker: ConfigContractTypeChecker =
   new ConfigContractTypeChecker(configContractLoader);
 const apiUrl = process.env.SYMEO_API_URL;
@@ -38,7 +38,7 @@ if (apiUrl && apiKey) {
 
 if (!configContractPath) {
   console.error(
-    'Missing config format file path. Are you sure you defined a configuration contract file path ? E.g ./symeo.config.yml',
+    'Missing configuration contract file path. Are you sure you defined a configuration contract file path ? E.g ./symeo.config.yml',
   );
   process.exit(1);
 }

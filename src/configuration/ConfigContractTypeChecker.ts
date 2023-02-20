@@ -3,17 +3,17 @@ import {
   ConfigurationContract,
   ConfigurationProperty,
 } from './ConfigurationContract';
-import { ConfigContractLoader } from './ConfigContractLoader';
+import { ContractLoader } from 'src/configuration/ContractLoader';
 
 export class ConfigContractTypeChecker {
-  constructor(private configContractLoader: ConfigContractLoader) {}
+  constructor(private configContractLoader: ContractLoader) {}
 
   public checkContractTypeCompatibility(
     configContractPath: string,
     config: Config,
   ): string[] {
     const configContract =
-      this.configContractLoader.loadConfigFormatFile(configContractPath);
+      this.configContractLoader.loadContractFile(configContractPath);
     return this.compareConfigContractAndConfigValuesTypes(
       configContract,
       config,

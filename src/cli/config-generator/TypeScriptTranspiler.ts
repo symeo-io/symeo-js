@@ -3,11 +3,11 @@ import * as tsc from 'typescript';
 import { promisify } from 'util';
 import originalGlob from 'glob';
 
-export class ConfigTranspiler {
+export class TypeScriptTranspiler {
   glob = promisify(originalGlob);
   outputs = [{ module: tsc.ModuleKind.CommonJS, directory: './' }];
 
-  async transpileClient(configPath: string, outputPath: string): Promise<void> {
+  async transpile(configPath: string, outputPath: string): Promise<void> {
     const tsFiles = await this.glob('**/*.ts', {
       cwd: configPath,
       absolute: true,

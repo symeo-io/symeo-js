@@ -5,35 +5,29 @@ import { dir } from 'tmp-promise';
 import checksum from 'checksum';
 import { join } from 'path';
 import { ConfigTypesGenerator } from './ConfigTypesGenerator';
-import { ConfigTranspiler } from './ConfigTranspiler';
+import { TypeScriptTranspiler } from 'src/cli/config-generator/TypeScriptTranspiler';
 
 export class ConfigLibraryGenerator {
   constructor(
     private configTypesGenerator: ConfigTypesGenerator,
-    private configTranspiler: ConfigTranspiler,
+    private configTranspiler: TypeScriptTranspiler,
   ) {}
 
   OUTPUT_PATH: string = join(__dirname, '../../config');
   CHECKSUM_PATH: string = join(this.OUTPUT_PATH, './checksum');
 
   public async generateConfigLibrary(
-    configFormat: ConfigurationContract,
+    contract: ConfigurationContract,
     forceRecreate = false,
   ) {
-    const configChecksum = checksum(JSON.stringify(configFormat));
+    const configChecksum = checksum(JSON.stringify(contract));
 
     if (forceRecreate || this.shouldRegenerateConfigLibrary(configChecksum)) {
       await mkdirp(this.OUTPUT_PATH);
 
       const randomTmpDir = await this.tmpDir('symeo');
-      await this.configTypesGenerator.generateTypesFile(
-        randomTmpDir,
-        configFormat,
-      );
-      await this.configTranspiler.transpileClient(
-        randomTmpDir,
-        this.OUTPUT_PATH,
-      );
+      await this.configTypesGenerator.generateTypesFile(randomTmpDir, contract);
+      await this.configTranspiler.transpile(randomTmpDir, this.OUTPUT_PATH);
       fsExtra.writeFileSync(this.CHECKSUM_PATH, configChecksum, 'utf8');
     }
   }

@@ -4,7 +4,7 @@ import fsExtra from 'fs-extra';
 import { faker } from '@faker-js/faker';
 import SpyInstance = jest.SpyInstance;
 import { ConfigTypesGenerator } from 'src/cli/config-generator/ConfigTypesGenerator';
-import { ConfigTranspiler } from 'src/cli/config-generator/ConfigTranspiler';
+import { TypeScriptTranspiler } from 'src/cli/config-generator/TypeScriptTranspiler';
 import { ConfigLibraryGenerator } from 'src/cli/config-generator/ConfigLibraryGenerator';
 import { ConfigurationContract } from 'src/cli/ConfigurationContract';
 import mkdirp from 'mkdirp';
@@ -21,8 +21,8 @@ describe('ConfigLibrary', () => {
     let mockedConfigTypesGenerator: ConfigTypesGenerator;
     let configTypesGenerator: ConfigTypesGenerator;
 
-    let mockedConfigTranspiler: ConfigTranspiler;
-    let configTranspiler: ConfigTranspiler;
+    let mockedConfigTranspiler: TypeScriptTranspiler;
+    let configTranspiler: TypeScriptTranspiler;
 
     let configLibraryGenerator: ConfigLibraryGenerator;
 
@@ -42,7 +42,7 @@ describe('ConfigLibrary', () => {
       mockedConfigTypesGenerator = mock(ConfigTypesGenerator);
       configTypesGenerator = instance(mockedConfigTypesGenerator);
 
-      mockedConfigTranspiler = mock(ConfigTranspiler);
+      mockedConfigTranspiler = mock(TypeScriptTranspiler);
       configTranspiler = instance(mockedConfigTranspiler);
 
       mockedFsExtraExistSync = jest.spyOn(fsExtra, 'existsSync');

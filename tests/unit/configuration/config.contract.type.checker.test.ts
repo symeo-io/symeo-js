@@ -3,7 +3,7 @@ import { join } from 'path';
 import YAML from 'yamljs';
 import fsExtra from 'fs-extra';
 import { faker } from '@faker-js/faker';
-import { ConfigContractLoader } from 'src/configuration/ConfigContractLoader';
+import { ContractLoader } from 'src/configuration/ContractLoader';
 import { ConfigContractTypeChecker } from 'src/configuration/ConfigContractTypeChecker';
 import { Config } from 'src/configuration/types';
 import SpyInstance = jest.SpyInstance;
@@ -12,7 +12,7 @@ describe('ConfigContractTypeChecker', () => {
   describe('checkContractTypeCompatibility', () => {
     let tmpDirectoryPath: string;
     let tmpConfigContractPath: string;
-    let configContractLoader: ConfigContractLoader;
+    let configContractLoader: ContractLoader;
     let configContractTypeChecker: ConfigContractTypeChecker;
 
     let mockedProcessExit: SpyInstance;
@@ -47,7 +47,7 @@ describe('ConfigContractTypeChecker', () => {
       tmpDirectoryPath = (await dir({ prefix: 'symeo-test' })).path;
       tmpConfigContractPath = join(tmpDirectoryPath, './test.config.yml');
 
-      configContractLoader = new ConfigContractLoader();
+      configContractLoader = new ContractLoader();
 
       configContractTypeChecker = new ConfigContractTypeChecker(
         configContractLoader,
@@ -70,7 +70,7 @@ describe('ConfigContractTypeChecker', () => {
       fsExtra.unlinkSync(tmpConfigContractPath);
     });
 
-    it('should return errors for missing config format file path', () => {
+    it('should return errors for missing configuration contract file path', () => {
       // Given
       const wrongConfigContractPath: string = faker.datatype.string();
       let config: Config;
@@ -83,7 +83,7 @@ describe('ConfigContractTypeChecker', () => {
         );
       }).toThrow(
         new Error(
-          'Missing configuration format file at ' + wrongConfigContractPath,
+          'Missing configuration contract file at ' + wrongConfigContractPath,
         ),
       );
     });

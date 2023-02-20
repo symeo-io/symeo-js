@@ -2,12 +2,12 @@ import { join } from 'path';
 import YAML from 'yamljs';
 import fsExtra from 'fs-extra';
 import { dir } from 'tmp-promise';
-import { ConfigContractLoader } from 'src/cli/config-generator/ConfigContractLoader';
+import { ContractLoader } from 'src/cli/config-generator/ContractLoader';
 import { ConfigurationContract } from 'src/cli/ConfigurationContract';
 
 describe('loadConfigFormatFile', () => {
   let tmpDirectoryPath: string;
-  const configContractLoader: ConfigContractLoader = new ConfigContractLoader();
+  const configContractLoader: ContractLoader = new ContractLoader();
 
   beforeEach(async () => {
     tmpDirectoryPath = (await dir({ prefix: 'symeo-test' })).path;
@@ -19,8 +19,10 @@ describe('loadConfigFormatFile', () => {
 
     // Then
     expect(() => {
-      configContractLoader.loadConfigFormatFile(configFilePath);
-    }).toThrow(new Error('Missing config format file at ' + configFilePath));
+      configContractLoader.loadContractFile(configFilePath);
+    }).toThrow(
+      new Error('Missing configuration contract file at ' + configFilePath),
+    );
   });
 
   it('should return configuration contract', () => {
@@ -76,7 +78,7 @@ describe('loadConfigFormatFile', () => {
 
     // When
     const configurationContract: ConfigurationContract =
-      configContractLoader.loadConfigFormatFile(configFilePath);
+      configContractLoader.loadContractFile(configFilePath);
     fsExtra.unlinkSync(configFilePath);
 
     // Then
