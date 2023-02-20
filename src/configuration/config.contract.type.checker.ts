@@ -23,6 +23,7 @@ export class ConfigContractTypeChecker {
   private compareConfigContractAndConfigValuesTypes(
     configContract: ConfigurationContract,
     config: Config,
+    parentPath?: string,
   ): string[] {
     const errors: string[] = [];
     Object.keys(configContract).forEach((propertyName) => {
@@ -30,7 +31,7 @@ export class ConfigContractTypeChecker {
       const valuesProperty = (config as any)[propertyName];
 
       if (!this.isConfigProperty(contractProperty) && !valuesProperty) {
-        errors.push(this.buildMissingPropertyError(propertyName));
+        errors.push(this.buildMissingPropertyError(propertyName, parentPath));
         return;
       }
 
@@ -39,6 +40,7 @@ export class ConfigContractTypeChecker {
           ...this.compareConfigContractAndConfigValuesTypes(
             contractProperty as ConfigurationContract,
             valuesProperty,
+            this.buildParentPath(parentPath, propertyName),
           ),
         );
         return;
@@ -50,7 +52,7 @@ export class ConfigContractTypeChecker {
           contractProperty as ConfigurationProperty,
         )
       ) {
-        errors.push(this.buildMissingPropertyError(propertyName));
+        errors.push(this.buildMissingPropertyError(propertyName, parentPath));
         return;
       }
 
@@ -64,6 +66,7 @@ export class ConfigContractTypeChecker {
         errors.push(
           this.buildWrongTypeError(
             propertyName,
+            parentPath,
             contractProperty,
             valuesProperty,
           ),
@@ -94,17 +97,38 @@ export class ConfigContractTypeChecker {
     return el.type && typeof el.type === 'string';
   }
 
-  private buildMissingPropertyError(propertyName: string): string {
-    return `The property "${propertyName}" of your configuration contract is missing in your configuration values.`;
+  private buildMissingPropertyError(
+    propertyName: string,
+    parentPath: string | undefined,
+  ): string {
+    const displayedPropertyName = this.buildParentPath(
+      parentPath,
+      propertyName,
+    );
+    return `The property "${displayedPropertyName}" of your configuration contract is missing in your configuration values.`;
   }
 
   private buildWrongTypeError(
     propertyName: string,
+    parentPath: string | undefined,
     contractProperty: any,
     configProperty: any,
   ) {
-    return `Configuration property "${propertyName}" has type "${typeof configProperty}" while configuration contract defined "${propertyName}" as "${
+    const displayedPropertyName = this.buildParentPath(
+      parentPath,
+      propertyName,
+    );
+    return `Configuration property "${displayedPropertyName}" has type "${typeof configProperty}" while configuration contract defined "${displayedPropertyName}" as "${
       contractProperty.type
     }".`;
+  }
+
+  private buildParentPath(
+    previousParentPath: string | undefined,
+    propertyName: string,
+  ) {
+    return previousParentPath !== undefined
+      ? previousParentPath + '.' + propertyName
+      : propertyName;
   }
 }

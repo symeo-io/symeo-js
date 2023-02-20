@@ -129,7 +129,7 @@ describe('ConfigContractTypeChecker', () => {
           isAdmin: faker.datatype.boolean(),
         },
       };
-      const missingPropertyValueNotOptional = 'responseLimit';
+      const missingPropertyValueNotOptional = 'database.responseLimit';
 
       //Then
       expect(
@@ -144,7 +144,7 @@ describe('ConfigContractTypeChecker', () => {
 
     it('should throw new error for config property value which has different type from contract', () => {
       // Given
-      const wrongTypeProperty = 'responseLimit';
+      const wrongTypeProperty = 'database.responseLimit';
       const wrongTypeFaker = faker.datatype.string();
       const config = {
         database: {
