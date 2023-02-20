@@ -7,18 +7,15 @@ import { ConfigContractLoader } from 'src/configuration/config.contract.loader';
 import { ConfigContractTypeChecker } from 'src/configuration/config.contract.type.checker';
 import { Config } from 'src/configuration/types';
 import SpyInstance = jest.SpyInstance;
-import { ConfigContractTypeCheckerError } from '../../../src/configuration/config.contract.type.checker.error';
 
 describe('ConfigContractTypeChecker', () => {
   describe('checkContractTypeCompatibility', () => {
     let tmpDirectoryPath: string;
     let tmpConfigContractPath: string;
     let configContractLoader: ConfigContractLoader;
-    let configContractTypeCheckerError: ConfigContractTypeCheckerError;
     let configContractTypeChecker: ConfigContractTypeChecker;
 
     let mockedProcessExit: SpyInstance;
-    let configContractTypeCheckerErrorSpy: SpyInstance;
 
     const configContract = {
       database: {
@@ -52,11 +49,8 @@ describe('ConfigContractTypeChecker', () => {
 
       configContractLoader = new ConfigContractLoader();
 
-      configContractTypeCheckerError = new ConfigContractTypeCheckerError();
-
       configContractTypeChecker = new ConfigContractTypeChecker(
         configContractLoader,
-        configContractTypeCheckerError,
       );
 
       jest.spyOn(console, 'error').mockImplementation();
@@ -67,11 +61,6 @@ describe('ConfigContractTypeChecker', () => {
           throw new Error('process exit: ' + code);
         });
 
-      configContractTypeCheckerErrorSpy = jest.spyOn(
-        configContractTypeCheckerError,
-        'checkErrors',
-      );
-
       const yamlConfigContract = YAML.stringify(configContract, 6);
       fsExtra.writeFileSync(tmpConfigContractPath, yamlConfigContract);
     });
@@ -81,7 +70,7 @@ describe('ConfigContractTypeChecker', () => {
       fsExtra.unlinkSync(tmpConfigContractPath);
     });
 
-    it('should throw new error for missing config format file path', () => {
+    it('should return errors for missing config format file path', () => {
       // Given
       const wrongConfigContractPath: string = faker.datatype.string();
       let config: Config;
@@ -116,13 +105,12 @@ describe('ConfigContractTypeChecker', () => {
       const badNamedProperty = 'database';
 
       //Then
-      expect(() => {
+      expect(
         configContractTypeChecker.checkContractTypeCompatibility(
           tmpConfigContractPath,
           config,
-        );
-      }).toThrowError();
-      expect(configContractTypeCheckerErrorSpy).toBeCalledWith([
+        ),
+      ).toEqual([
         `The property "${badNamedProperty}" of your configuration contract is missing in your configuration values.`,
       ]);
     });
@@ -144,13 +132,12 @@ describe('ConfigContractTypeChecker', () => {
       const missingPropertyValueNotOptional = 'responseLimit';
 
       //Then
-      expect(() => {
+      expect(
         configContractTypeChecker.checkContractTypeCompatibility(
           tmpConfigContractPath,
           config,
-        );
-      }).toThrowError();
-      expect(configContractTypeCheckerErrorSpy).toBeCalledWith([
+        ),
+      ).toEqual([
         `The property "${missingPropertyValueNotOptional}" of your configuration contract is missing in your configuration values.`,
       ]);
     });
@@ -174,13 +161,12 @@ describe('ConfigContractTypeChecker', () => {
       };
 
       //Then
-      expect(() => {
+      expect(
         configContractTypeChecker.checkContractTypeCompatibility(
           tmpConfigContractPath,
           config,
-        );
-      }).toThrowError();
-      expect(configContractTypeCheckerErrorSpy).toBeCalledWith([
+        ),
+      ).toEqual([
         `Configuration property "${wrongTypeProperty}" has type "${typeof wrongTypeFaker}" while configuration contract defined "${wrongTypeProperty}" as "${
           configContract.database.responseLimit.type
         }".`,
@@ -204,12 +190,12 @@ describe('ConfigContractTypeChecker', () => {
       };
 
       //Then
-      expect(() => {
+      expect(
         configContractTypeChecker.checkContractTypeCompatibility(
           tmpConfigContractPath,
           config,
-        );
-      }).not.toThrow(new Error());
+        ),
+      ).toEqual([]);
     });
   });
 });

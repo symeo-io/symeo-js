@@ -4,77 +4,74 @@ import {
   ConfigurationProperty,
 } from './config.contract';
 import { ConfigContractLoader } from './config.contract.loader';
-import { ConfigContractTypeCheckerError } from './config.contract.type.checker.error';
 
 export class ConfigContractTypeChecker {
-  constructor(
-    private configContractLoader: ConfigContractLoader,
-    private configContractTypeCheckerError: ConfigContractTypeCheckerError,
-  ) {}
+  constructor(private configContractLoader: ConfigContractLoader) {}
 
   public checkContractTypeCompatibility(
     configContractPath: string,
     config: Config,
-  ) {
+  ): string[] {
     const configContract =
       this.configContractLoader.loadConfigFormatFile(configContractPath);
-    this.compareConfigContractAndConfigValuesTypes(configContract, config);
+    return this.compareConfigContractAndConfigValuesTypes(
+      configContract,
+      config,
+    );
   }
 
   private compareConfigContractAndConfigValuesTypes(
     configContract: ConfigurationContract,
     config: Config,
-  ) {
+  ): string[] {
+    const errors: string[] = [];
     Object.keys(configContract).forEach((propertyName) => {
-      let errors: string[] = [];
-
       const contractProperty = configContract[propertyName];
-      const configProperty = config[propertyName];
+      const valuesProperty = (config as any)[propertyName];
 
-      if (this.isConfigProperty(contractProperty)) {
-        if (!configProperty) {
-          if (
-            !this.isContractPropertyOptional(
-              contractProperty as ConfigurationProperty,
-            )
-          ) {
-            errors =
-              this.configContractTypeCheckerError.addMissingPropertyError(
-                errors,
-                propertyName,
-              );
-          }
-        } else {
-          if (
-            !this.contractPropertyAndConfigValueHaveSameType(
-              contractProperty as ConfigurationProperty,
-              configProperty,
-            )
-          ) {
-            errors = this.configContractTypeCheckerError.addWrongTypeError(
-              errors,
-              propertyName,
-              contractProperty,
-              configProperty,
-            );
-          }
-        }
-        this.configContractTypeCheckerError.checkErrors(errors);
-      } else {
-        if (!configProperty) {
-          errors = this.configContractTypeCheckerError.addMissingPropertyError(
-            errors,
+      if (!this.isConfigProperty(contractProperty) && !valuesProperty) {
+        errors.push(this.buildMissingPropertyError(propertyName));
+        return;
+      }
+
+      if (!this.isConfigProperty(contractProperty) && !!valuesProperty) {
+        errors.push(
+          ...this.compareConfigContractAndConfigValuesTypes(
+            contractProperty as ConfigurationContract,
+            valuesProperty,
+          ),
+        );
+        return;
+      }
+
+      if (
+        valuesProperty === undefined &&
+        !this.isContractPropertyOptional(
+          contractProperty as ConfigurationProperty,
+        )
+      ) {
+        errors.push(this.buildMissingPropertyError(propertyName));
+        return;
+      }
+
+      if (
+        valuesProperty !== undefined &&
+        !this.contractPropertyAndConfigValueHaveSameType(
+          contractProperty as ConfigurationProperty,
+          valuesProperty,
+        )
+      ) {
+        errors.push(
+          this.buildWrongTypeError(
             propertyName,
-          );
-        }
-        this.configContractTypeCheckerError.checkErrors(errors);
-
-        this.compareConfigContractAndConfigValuesTypes(
-          contractProperty as ConfigurationContract,
-          configProperty,
+            contractProperty,
+            valuesProperty,
+          ),
         );
       }
     });
+
+    return errors;
   }
 
   private contractPropertyAndConfigValueHaveSameType(
@@ -95,5 +92,19 @@ export class ConfigContractTypeChecker {
 
   private isConfigProperty(el: ConfigurationContract | ConfigurationProperty) {
     return el.type && typeof el.type === 'string';
+  }
+
+  private buildMissingPropertyError(propertyName: string): string {
+    return `The property "${propertyName}" of your configuration contract is missing in your configuration values.`;
+  }
+
+  private buildWrongTypeError(
+    propertyName: string,
+    contractProperty: any,
+    configProperty: any,
+  ) {
+    return `Configuration property "${propertyName}" has type "${typeof configProperty}" while configuration contract defined "${propertyName}" as "${
+      contractProperty.type
+    }".`;
   }
 }

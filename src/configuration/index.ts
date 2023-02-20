@@ -3,18 +3,12 @@ import { Config } from './types';
 import fetch from 'sync-fetch';
 import { ConfigContractTypeChecker } from './config.contract.type.checker';
 import { ConfigContractLoader } from './config.contract.loader';
-import { ConfigContractTypeCheckerError } from './config.contract.type.checker.error';
-import ora from 'ora';
+import chalk from 'chalk';
 
 let config: Config;
 const configContractLoader: ConfigContractLoader = new ConfigContractLoader();
-const configContractTypeCheckerError: ConfigContractTypeCheckerError =
-  new ConfigContractTypeCheckerError();
 const configContractTypeChecker: ConfigContractTypeChecker =
-  new ConfigContractTypeChecker(
-    configContractLoader,
-    configContractTypeCheckerError,
-  );
+  new ConfigContractTypeChecker(configContractLoader);
 const apiUrl = process.env.SYMEO_API_URL;
 const apiKey = process.env.SYMEO_API_KEY;
 const localConfigFilePath = process.env.SYMEO_LOCAL_CONFIGURATION_FILE;
@@ -49,14 +43,14 @@ if (!configContractPath) {
   process.exit(1);
 }
 
-configContractTypeChecker.checkContractTypeCompatibility(
+const errors = configContractTypeChecker.checkContractTypeCompatibility(
   configContractPath,
   config,
 );
 
-async function spin<T>(text: string, promise: Promise<T>): Promise<T> {
-  ora.promise(promise, { text, spinner: 'dots3', color: 'magenta' });
-  return await promise;
+if (errors.length > 0) {
+  errors.forEach((error) => console.error(chalk.red(error)));
+  process.exit(1);
 }
 
 export { config };
