@@ -13,3 +13,15 @@ export type ConfigurationPropertyType =
   | 'integer'
   | 'float'
   | 'boolean';
+
+export function isContractPropertyOptional(
+  contractProperty: ConfigurationProperty,
+) {
+  return contractProperty.optional === true;
+}
+
+export function isConfigProperty(
+  el: ConfigurationContract | ConfigurationProperty,
+) {
+  return el.type && typeof el.type === 'string';
+}

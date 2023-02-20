@@ -4,9 +4,9 @@ import chalk from 'chalk';
 import ora from 'ora';
 import spawn from 'cross-spawn';
 import { parseArgs } from './parseArgs';
-import { ContractLoader } from 'src/cli/config-generator/ContractLoader';
+import { ContractLoader } from './config-generator/ContractLoader';
 import { ConfigTypesGenerator } from './config-generator/ConfigTypesGenerator';
-import { TypeScriptTranspiler } from 'src/cli/config-generator/TypeScriptTranspiler';
+import { TypeScriptTranspiler } from './config-generator/TypeScriptTranspiler';
 import { ConfigLibraryGenerator } from './config-generator/ConfigLibraryGenerator';
 
 export const LOCAL_CONFIGURATION_FILE_VARIABLE_NAME =

@@ -1,92 +1,34 @@
-import { dir } from 'tmp-promise';
-import { join } from 'path';
-import YAML from 'yamljs';
-import fsExtra from 'fs-extra';
 import { faker } from '@faker-js/faker';
-import { ContractLoader } from 'src/configuration/ContractLoader';
 import { ConfigContractTypeChecker } from 'src/configuration/ConfigContractTypeChecker';
-import { Config } from 'src/configuration/types';
-import SpyInstance = jest.SpyInstance;
+import { ConfigurationPropertyType } from 'src/configuration/ConfigurationContract';
 
 describe('ConfigContractTypeChecker', () => {
   describe('checkContractTypeCompatibility', () => {
-    let tmpDirectoryPath: string;
-    let tmpConfigContractPath: string;
-    let configContractLoader: ContractLoader;
-    let configContractTypeChecker: ConfigContractTypeChecker;
-
-    let mockedProcessExit: SpyInstance;
-
     const configContract = {
       database: {
         host: {
-          type: 'string',
+          type: 'string' as ConfigurationPropertyType,
           optional: true,
         },
         password: {
-          type: 'string',
+          type: 'string' as ConfigurationPropertyType,
           optional: true,
         },
         responseLimit: {
-          type: 'float',
+          type: 'float' as ConfigurationPropertyType,
         },
       },
       vcsProvider: {
         paginationLength: {
-          type: 'integer',
+          type: 'integer' as ConfigurationPropertyType,
         },
       },
       auth0: {
         isAdmin: {
-          type: 'boolean',
+          type: 'boolean' as ConfigurationPropertyType,
         },
       },
     };
-
-    beforeEach(async () => {
-      tmpDirectoryPath = (await dir({ prefix: 'symeo-test' })).path;
-      tmpConfigContractPath = join(tmpDirectoryPath, './test.config.yml');
-
-      configContractLoader = new ContractLoader();
-
-      configContractTypeChecker = new ConfigContractTypeChecker(
-        configContractLoader,
-      );
-
-      jest.spyOn(console, 'error').mockImplementation();
-
-      mockedProcessExit = jest
-        .spyOn(process, 'exit')
-        .mockImplementation((code) => {
-          throw new Error('process exit: ' + code);
-        });
-
-      const yamlConfigContract = YAML.stringify(configContract, 6);
-      fsExtra.writeFileSync(tmpConfigContractPath, yamlConfigContract);
-    });
-
-    afterEach(() => {
-      mockedProcessExit.mockRestore();
-      fsExtra.unlinkSync(tmpConfigContractPath);
-    });
-
-    it('should return errors for missing configuration contract file path', () => {
-      // Given
-      const wrongConfigContractPath: string = faker.datatype.string();
-      let config: Config;
-
-      // Then
-      expect(() => {
-        configContractTypeChecker.checkContractTypeCompatibility(
-          wrongConfigContractPath,
-          config,
-        );
-      }).toThrow(
-        new Error(
-          'Missing configuration contract file at ' + wrongConfigContractPath,
-        ),
-      );
-    });
 
     it('should throw new error for non config property missing or not well named', () => {
       // Given
@@ -106,8 +48,8 @@ describe('ConfigContractTypeChecker', () => {
 
       //Then
       expect(
-        configContractTypeChecker.checkContractTypeCompatibility(
-          tmpConfigContractPath,
+        ConfigContractTypeChecker.checkContractTypeCompatibility(
+          configContract,
           config,
         ),
       ).toEqual([
@@ -133,8 +75,8 @@ describe('ConfigContractTypeChecker', () => {
 
       //Then
       expect(
-        configContractTypeChecker.checkContractTypeCompatibility(
-          tmpConfigContractPath,
+        ConfigContractTypeChecker.checkContractTypeCompatibility(
+          configContract,
           config,
         ),
       ).toEqual([
@@ -162,8 +104,8 @@ describe('ConfigContractTypeChecker', () => {
 
       //Then
       expect(
-        configContractTypeChecker.checkContractTypeCompatibility(
-          tmpConfigContractPath,
+        ConfigContractTypeChecker.checkContractTypeCompatibility(
+          configContract,
           config,
         ),
       ).toEqual([
@@ -191,8 +133,8 @@ describe('ConfigContractTypeChecker', () => {
 
       //Then
       expect(
-        configContractTypeChecker.checkContractTypeCompatibility(
-          tmpConfigContractPath,
+        ConfigContractTypeChecker.checkContractTypeCompatibility(
+          configContract,
           config,
         ),
       ).toEqual([]);

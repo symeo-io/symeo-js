@@ -2,13 +2,11 @@ import YAML from 'yamljs';
 import { Config } from './types';
 import fetch from 'sync-fetch';
 import { ConfigContractTypeChecker } from './ConfigContractTypeChecker';
-import { ContractLoader } from 'src/configuration/ContractLoader';
+import { ContractLoader } from './ContractLoader';
 import chalk from 'chalk';
+import { ConfigInitializer } from './ConfigInitializer';
 
-let config: Config;
-const configContractLoader: ContractLoader = new ContractLoader();
-const configContractTypeChecker: ConfigContractTypeChecker =
-  new ConfigContractTypeChecker(configContractLoader);
+let rawConfig: any;
 const apiUrl = process.env.SYMEO_API_URL;
 const apiKey = process.env.SYMEO_API_KEY;
 const localConfigFilePath = process.env.SYMEO_LOCAL_CONFIGURATION_FILE;
@@ -26,9 +24,9 @@ if (apiUrl && apiKey) {
     process.exit(1);
   }
 
-  config = response.json().values;
+  rawConfig = response.json().values;
 } else if (localConfigFilePath) {
-  config = YAML.load(localConfigFilePath) as Config;
+  rawConfig = YAML.load(localConfigFilePath) as Config;
 } else {
   console.error(
     'Missing api key or local configuration file. Are you sure you wrapped you command with symeo cli? E.g symeo -- node index.js',
@@ -43,8 +41,11 @@ if (!configContractPath) {
   process.exit(1);
 }
 
-const errors = configContractTypeChecker.checkContractTypeCompatibility(
-  configContractPath,
+const configContract = ContractLoader.loadContractFile(configContractPath);
+const config = ConfigInitializer.initializeConfig(configContract, rawConfig);
+
+const errors = ConfigContractTypeChecker.checkContractTypeCompatibility(
+  configContract,
   config,
 );
 

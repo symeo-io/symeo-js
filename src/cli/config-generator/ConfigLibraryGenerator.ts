@@ -5,7 +5,7 @@ import { dir } from 'tmp-promise';
 import checksum from 'checksum';
 import { join } from 'path';
 import { ConfigTypesGenerator } from './ConfigTypesGenerator';
-import { TypeScriptTranspiler } from 'src/cli/config-generator/TypeScriptTranspiler';
+import { TypeScriptTranspiler } from './TypeScriptTranspiler';
 
 export class ConfigLibraryGenerator {
   constructor(

@@ -2,25 +2,12 @@ import { Config } from './types';
 import {
   ConfigurationContract,
   ConfigurationProperty,
+  isConfigProperty,
+  isContractPropertyOptional,
 } from './ConfigurationContract';
-import { ContractLoader } from 'src/configuration/ContractLoader';
 
 export class ConfigContractTypeChecker {
-  constructor(private configContractLoader: ContractLoader) {}
-
-  public checkContractTypeCompatibility(
-    configContractPath: string,
-    config: Config,
-  ): string[] {
-    const configContract =
-      this.configContractLoader.loadContractFile(configContractPath);
-    return this.compareConfigContractAndConfigValuesTypes(
-      configContract,
-      config,
-    );
-  }
-
-  private compareConfigContractAndConfigValuesTypes(
+  public static checkContractTypeCompatibility(
     configContract: ConfigurationContract,
     config: Config,
     parentPath?: string,
@@ -30,14 +17,14 @@ export class ConfigContractTypeChecker {
       const contractProperty = configContract[propertyName];
       const valuesProperty = (config as any)[propertyName];
 
-      if (!this.isConfigProperty(contractProperty) && !valuesProperty) {
+      if (!isConfigProperty(contractProperty) && !valuesProperty) {
         errors.push(this.buildMissingPropertyError(propertyName, parentPath));
         return;
       }
 
-      if (!this.isConfigProperty(contractProperty) && !!valuesProperty) {
+      if (!isConfigProperty(contractProperty) && !!valuesProperty) {
         errors.push(
-          ...this.compareConfigContractAndConfigValuesTypes(
+          ...this.checkContractTypeCompatibility(
             contractProperty as ConfigurationContract,
             valuesProperty,
             this.buildParentPath(parentPath, propertyName),
@@ -48,9 +35,7 @@ export class ConfigContractTypeChecker {
 
       if (
         valuesProperty === undefined &&
-        !this.isContractPropertyOptional(
-          contractProperty as ConfigurationProperty,
-        )
+        !isContractPropertyOptional(contractProperty as ConfigurationProperty)
       ) {
         errors.push(this.buildMissingPropertyError(propertyName, parentPath));
         return;
@@ -77,7 +62,7 @@ export class ConfigContractTypeChecker {
     return errors;
   }
 
-  private contractPropertyAndConfigValueHaveSameType(
+  private static contractPropertyAndConfigValueHaveSameType(
     contractProperty: ConfigurationProperty,
     configProperty: any,
   ): boolean {
@@ -89,15 +74,7 @@ export class ConfigContractTypeChecker {
     return typeof configProperty === contractProperty.type;
   }
 
-  private isContractPropertyOptional(contractProperty: ConfigurationProperty) {
-    return contractProperty.optional === true;
-  }
-
-  private isConfigProperty(el: ConfigurationContract | ConfigurationProperty) {
-    return el.type && typeof el.type === 'string';
-  }
-
-  private buildMissingPropertyError(
+  private static buildMissingPropertyError(
     propertyName: string,
     parentPath: string | undefined,
   ): string {
@@ -108,7 +85,7 @@ export class ConfigContractTypeChecker {
     return `The property "${displayedPropertyName}" of your configuration contract is missing in your configuration values.`;
   }
 
-  private buildWrongTypeError(
+  private static buildWrongTypeError(
     propertyName: string,
     parentPath: string | undefined,
     contractProperty: any,
@@ -123,7 +100,7 @@ export class ConfigContractTypeChecker {
     }".`;
   }
 
-  private buildParentPath(
+  private static buildParentPath(
     previousParentPath: string | undefined,
     propertyName: string,
   ) {
