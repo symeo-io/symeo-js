@@ -3,8 +3,8 @@ import { join } from 'path';
 import YAML from 'yamljs';
 import fsExtra from 'fs-extra';
 import { faker } from '@faker-js/faker';
-import { ConfigContractLoader } from 'src/configuration/config.contract.loader';
-import { ConfigContractTypeChecker } from 'src/configuration/config.contract.type.checker';
+import { ConfigContractLoader } from 'src/configuration/ConfigContractLoader';
+import { ConfigContractTypeChecker } from 'src/configuration/ConfigContractTypeChecker';
 import { Config } from 'src/configuration/types';
 import SpyInstance = jest.SpyInstance;
 

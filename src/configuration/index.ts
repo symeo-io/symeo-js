@@ -1,8 +1,8 @@
 import YAML from 'yamljs';
 import { Config } from './types';
 import fetch from 'sync-fetch';
-import { ConfigContractTypeChecker } from './config.contract.type.checker';
-import { ConfigContractLoader } from './config.contract.loader';
+import { ConfigContractTypeChecker } from './ConfigContractTypeChecker';
+import { ConfigContractLoader } from './ConfigContractLoader';
 import chalk from 'chalk';
 
 let config: Config;

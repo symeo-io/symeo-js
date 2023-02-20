@@ -2,8 +2,8 @@ import { Config } from './types';
 import {
   ConfigurationContract,
   ConfigurationProperty,
-} from './config.contract';
-import { ConfigContractLoader } from './config.contract.loader';
+} from './ConfigurationContract';
+import { ConfigContractLoader } from './ConfigContractLoader';
 
 export class ConfigContractTypeChecker {
   constructor(private configContractLoader: ConfigContractLoader) {}

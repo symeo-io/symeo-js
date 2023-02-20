@@ -1,11 +1,11 @@
 import mkdirp from 'mkdirp';
-import { ConfigurationContract } from '../config.contract';
+import { ConfigurationContract } from '../ConfigurationContract';
 import fsExtra from 'fs-extra';
 import { dir } from 'tmp-promise';
 import checksum from 'checksum';
 import { join } from 'path';
-import { ConfigTypesGenerator } from './config.types.generator';
-import { ConfigTranspiler } from './config.transpiler';
+import { ConfigTypesGenerator } from './ConfigTypesGenerator';
+import { ConfigTranspiler } from './ConfigTranspiler';
 
 export class ConfigLibraryGenerator {
   constructor(

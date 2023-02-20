@@ -3,10 +3,10 @@ import { anyString, anything, instance, mock, verify } from 'ts-mockito';
 import fsExtra from 'fs-extra';
 import { faker } from '@faker-js/faker';
 import SpyInstance = jest.SpyInstance;
-import { ConfigTypesGenerator } from 'src/cli/config-generator/config.types.generator';
-import { ConfigTranspiler } from 'src/cli/config-generator/config.transpiler';
-import { ConfigLibraryGenerator } from 'src/cli/config-generator/config.library.generator';
-import { ConfigurationContract } from 'src/cli/config.contract';
+import { ConfigTypesGenerator } from 'src/cli/config-generator/ConfigTypesGenerator';
+import { ConfigTranspiler } from 'src/cli/config-generator/ConfigTranspiler';
+import { ConfigLibraryGenerator } from 'src/cli/config-generator/ConfigLibraryGenerator';
+import { ConfigurationContract } from 'src/cli/ConfigurationContract';
 import mkdirp from 'mkdirp';
 
 jest.mock('mkdirp');

@@ -4,10 +4,10 @@ import chalk from 'chalk';
 import ora from 'ora';
 import spawn from 'cross-spawn';
 import { parseArgs } from './parseArgs';
-import { ConfigContractLoader } from './config-generator/config.contract.loader';
-import { ConfigTypesGenerator } from './config-generator/config.types.generator';
-import { ConfigTranspiler } from './config-generator/config.transpiler';
-import { ConfigLibraryGenerator } from './config-generator/config.library.generator';
+import { ConfigContractLoader } from './config-generator/ConfigContractLoader';
+import { ConfigTypesGenerator } from './config-generator/ConfigTypesGenerator';
+import { ConfigTranspiler } from './config-generator/ConfigTranspiler';
+import { ConfigLibraryGenerator } from './config-generator/ConfigLibraryGenerator';
 
 export const LOCAL_CONFIGURATION_FILE_VARIABLE_NAME =
   'SYMEO_LOCAL_CONFIGURATION_FILE';

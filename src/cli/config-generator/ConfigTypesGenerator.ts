@@ -1,7 +1,7 @@
 import {
   ConfigurationContract,
   ConfigurationProperty,
-} from '../config.contract';
+} from '../ConfigurationContract';
 import { join } from 'path';
 import fsExtra from 'fs-extra';
 
