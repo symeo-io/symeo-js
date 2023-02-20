@@ -2,8 +2,8 @@ import { join } from 'path';
 import YAML from 'yamljs';
 import fsExtra from 'fs-extra';
 import { dir } from 'tmp-promise';
-import { ConfigContractLoader } from '../../../../src/cli/config-generator/config.contract.loader';
-import { ConfigurationContract } from '../../../../src/cli/types';
+import { ConfigContractLoader } from 'src/cli/config-generator/config.contract.loader';
+import { ConfigurationContract } from 'src/cli/config.contract';
 
 describe('loadConfigFormatFile', () => {
   let tmpDirectoryPath: string;

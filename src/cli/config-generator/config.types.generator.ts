@@ -1,4 +1,7 @@
-import { ConfigurationContract, ConfigurationProperty } from '../types';
+import {
+  ConfigurationContract,
+  ConfigurationProperty,
+} from '../config.contract';
 import { join } from 'path';
 import fsExtra from 'fs-extra';
 

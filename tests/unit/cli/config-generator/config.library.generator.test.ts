@@ -3,15 +3,20 @@ import { anyString, anything, instance, mock, verify } from 'ts-mockito';
 import fsExtra from 'fs-extra';
 import { faker } from '@faker-js/faker';
 import SpyInstance = jest.SpyInstance;
-import { ConfigLibraryGenerator } from '../../../../src/cli/config-generator/config.library.generator';
-import { ConfigTypesGenerator } from '../../../../src/cli/config-generator/config.types.generator';
-import { ConfigTranspiler } from '../../../../src/cli/config-generator/config.transpiler';
-import { ConfigurationContract } from '../../../../src/cli/types';
+import { ConfigTypesGenerator } from 'src/cli/config-generator/config.types.generator';
+import { ConfigTranspiler } from 'src/cli/config-generator/config.transpiler';
+import { ConfigLibraryGenerator } from 'src/cli/config-generator/config.library.generator';
+import { ConfigurationContract } from 'src/cli/config.contract';
+import mkdirp from 'mkdirp';
+
+jest.mock('mkdirp');
+const mockedMkdirp = <jest.Mock<typeof mkdirp>>(<unknown>mkdirp);
 
 describe('ConfigLibrary', () => {
   describe('generateConfigLibrary', () => {
     let mockedFsExtraExistSync: SpyInstance;
     let mockedFsExtraReadFileSync: SpyInstance;
+    let mockedFsExtraWriteFileSync: SpyInstance;
 
     let mockedConfigTypesGenerator: ConfigTypesGenerator;
     let configTypesGenerator: ConfigTypesGenerator;
@@ -42,6 +47,11 @@ describe('ConfigLibrary', () => {
 
       mockedFsExtraExistSync = jest.spyOn(fsExtra, 'existsSync');
       mockedFsExtraReadFileSync = jest.spyOn(fsExtra, 'readFileSync');
+      mockedFsExtraWriteFileSync = jest
+        .spyOn(fsExtra, 'writeFileSync')
+        .mockImplementation();
+
+      mockedMkdirp.mockImplementation();
 
       configLibraryGenerator = new ConfigLibraryGenerator(
         configTypesGenerator,
@@ -52,6 +62,7 @@ describe('ConfigLibrary', () => {
     afterEach(() => {
       mockedFsExtraExistSync.mockRestore();
       mockedFsExtraReadFileSync.mockRestore();
+      mockedFsExtraWriteFileSync.mockRestore();
     });
 
     it('should not regenerate config library for unchanged contract', async () => {
@@ -66,6 +77,7 @@ describe('ConfigLibrary', () => {
       verify(
         mockedConfigTypesGenerator.generateTypesFile(anyString(), anything()),
       ).never();
+      expect(mockedFsExtraWriteFileSync).not.toHaveBeenCalled();
     });
 
     it('should regenerate config library', async () => {
@@ -84,6 +96,12 @@ describe('ConfigLibrary', () => {
           configurationContract,
         ),
       ).once();
+      expect(mockedFsExtraWriteFileSync).toHaveBeenCalledTimes(1);
+      expect(mockedFsExtraWriteFileSync).toHaveBeenCalledWith(
+        configLibraryGenerator.CHECKSUM_PATH,
+        checksum(JSON.stringify(configurationContract)),
+        'utf8',
+      );
     });
   });
 });
