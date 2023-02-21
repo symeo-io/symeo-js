@@ -26,7 +26,7 @@ if (apiUrl && apiKey) {
 
   rawConfig = response.json().values;
 } else if (localConfigFilePath) {
-  rawConfig = YAML.load(localConfigFilePath) as Config;
+  rawConfig = YAML.load(localConfigFilePath);
 } else {
   console.error(
     'Missing api key or local configuration file. Are you sure you wrapped you command with symeo cli? E.g symeo -- node index.js',
@@ -42,7 +42,10 @@ if (!configContractPath) {
 }
 
 const configContract = ContractLoader.loadContractFile(configContractPath);
-const config = ConfigInitializer.initializeConfig(configContract, rawConfig);
+const config: Config = ConfigInitializer.initializeConfig(
+  configContract,
+  rawConfig,
+);
 
 const errors = ConfigContractTypeChecker.checkContractTypeCompatibility(
   configContract,
