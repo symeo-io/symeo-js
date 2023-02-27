@@ -1,4 +1,30 @@
-# Symeo JS
+<h1 align="center">
+<a href="https://app.symeo.io/">
+  <img width="300" src="https://s3.eu-west-3.amazonaws.com/symeo.io-assets/symeo-logo.png" alt="symeo">
+</a>
+</h1>
+<p align="center">
+  <p align="center">Secret management as code. Easy. Centralized. Secured.</p>
+</p>
+
+
+<h4 align="center">
+  <a href="https://app.symeo.io/">SaaS</a> |
+  <a href="https://symeo.io/">Website</a> |
+  <a href="https://docs.symeo.io/">Docs</a>
+</h4>
+
+<h4 align="center">
+  <a href="https://github.com/medusajs/medusa/blob/master/LICENSE">
+    <img src="https://img.shields.io/badge/license-Apache-blue.svg" />
+  </a>
+ <a href="https://circleci.com/gh/symeo-io/symeo-js">
+    <img src="https://circleci.com/gh/symeo-io/symeo-js.svg?style=svg"/>
+ </a>
+
+</h4>
+
+# Symeo JS SDK
 
 The Symeo SDK made for interacting with your Symeo secrets and configuration from JavaScript or TypeScript applications.
 
@@ -137,7 +163,7 @@ node_modules/.bin/symeo-js -- node dist/index.js
 
 ### Start application with configuration from Symeo platform
 
-After creating an environment and its api key in the [Symeo platform](https://app-staging.symeo.io/), use this command in your package.json
+After creating an environment and its api key in the [Symeo platform](https://app.symeo.io/), use this command in your package.json
 
 ```shell
 symeo-js --api-key $YOUR_ENVIRONMENT_API_KEY -- node index.js
@@ -151,7 +177,7 @@ node_modules/.bin/symeo-js --api-key $YOUR_ENVIRONMENT_API_KEY -- node index.js
 
 So the sdk fetch the values for the given environment and starts your application with those values.
 
-Follow the [Symeo platform documentation](https://symeo.io/) for more details.
+Follow the [Symeo platform documentation](https://docs.symeo.io/) for more details.
 
 ## Symeo CLI options
 
