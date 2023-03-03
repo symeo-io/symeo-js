@@ -1,7 +1,7 @@
 {
   "name": "symeo-js",
   "repository": "https://github.com/symeo-io/symeo-js",
-  "version": "0.0.5",
+  "version": "0.0.6-rc.0",
   "main": "dist/cli.ts",
   "license": "Apache-2.0",
   "bin": {
