@@ -13,7 +13,7 @@ export class ConfigLibraryGenerator {
     private configTranspiler: TypeScriptTranspiler,
   ) {}
 
-  OUTPUT_PATH: string = join(__dirname, '../../config');
+  OUTPUT_PATH: string = join(process.cwd(), 'node_modules/.symeo-js/config');
   CHECKSUM_PATH: string = join(this.OUTPUT_PATH, './checksum');
 
   public async generateConfigLibrary(

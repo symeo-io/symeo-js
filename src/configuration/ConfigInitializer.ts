@@ -2,13 +2,12 @@ import {
   ConfigurationContract,
   isConfigProperty,
 } from './ConfigurationContract';
-import { Config } from './types';
 
 export class ConfigInitializer {
   public static initializeConfig(
     configContract: ConfigurationContract,
     config: any | undefined,
-  ): Config {
+  ): any {
     const initializedConfig: any = {};
     Object.keys(configContract).forEach((propertyName) => {
       const contractProperty = configContract[propertyName];
@@ -25,6 +24,6 @@ export class ConfigInitializer {
       initializedConfig[propertyName] = valuesProperty;
     });
 
-    return initializedConfig as Config;
+    return initializedConfig;
   }
 }
