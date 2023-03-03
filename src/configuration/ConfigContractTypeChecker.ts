@@ -1,4 +1,3 @@
-import { Config } from './types';
 import {
   ConfigurationContract,
   ConfigurationProperty,
@@ -9,7 +8,7 @@ import {
 export class ConfigContractTypeChecker {
   public static checkContractTypeCompatibility(
     configContract: ConfigurationContract,
-    config: Config,
+    config: any,
     parentPath?: string,
   ): string[] {
     const errors: string[] = [];

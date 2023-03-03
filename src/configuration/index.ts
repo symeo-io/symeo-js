@@ -1,5 +1,7 @@
 import YAML from 'yamljs';
-import { Config } from './types';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { Config } from '.symeo-js/config/types';
 import fetch from 'sync-fetch';
 import { ConfigContractTypeChecker } from './ConfigContractTypeChecker';
 import { ContractLoader } from './ContractLoader';
