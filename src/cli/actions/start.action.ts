@@ -3,7 +3,7 @@ import spawn from 'cross-spawn';
 import { Action } from './action';
 import { ContractLoader } from '../../contract/contract.loader';
 import { spin } from '../ui/spin';
-import { ContractTypesGenerator } from '../../contract/generator/contract-types.generator';
+import { ContractTypesGenerator } from '../../contract-type-generator/contract-types.generator';
 import {
   API_KEY_VARIABLE_NAME,
   API_URL_VARIABLE_NAME,

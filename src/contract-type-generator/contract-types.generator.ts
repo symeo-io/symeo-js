@@ -1,5 +1,5 @@
 import mkdirp from 'mkdirp';
-import { ConfigurationContract } from '../contract.types';
+import { ConfigurationContract } from '../contract/contract.types';
 import fsExtra from 'fs-extra';
 import { dir } from 'tmp-promise';
 import checksum from 'checksum';

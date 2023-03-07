@@ -1,7 +1,7 @@
 import { Action } from './action';
 import { ContractLoader } from '../../contract/contract.loader';
 import { spin } from '../ui/spin';
-import { ContractTypesGenerator } from '../../contract/generator/contract-types.generator';
+import { ContractTypesGenerator } from '../../contract-type-generator/contract-types.generator';
 import chalk from 'chalk';
 
 export type BuildActionInput = {

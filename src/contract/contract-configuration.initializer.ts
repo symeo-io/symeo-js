@@ -1,9 +1,7 @@
-import {
-  ConfigurationContract,
-  isConfigProperty,
-} from './ConfigurationContract';
+import { ConfigurationContract } from './contract.types';
+import { isConfigProperty } from './contract.utils';
 
-export class ConfigInitializer {
+export class ContractConfigurationInitializer {
   public static initializeConfig(
     configContract: ConfigurationContract,
     config: any | undefined,

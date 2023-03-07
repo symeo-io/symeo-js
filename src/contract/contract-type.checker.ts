@@ -1,11 +1,7 @@
-import {
-  ConfigurationContract,
-  ConfigurationProperty,
-  isConfigProperty,
-  isContractPropertyOptional,
-} from './ConfigurationContract';
+import { ConfigurationContract, ConfigurationProperty } from './contract.types';
+import { isConfigProperty, isContractPropertyOptional } from './contract.utils';
 
-export class ConfigContractTypeChecker {
+export class ContractTypeChecker {
   public static checkContractTypeCompatibility(
     configContract: ConfigurationContract,
     config: any,
