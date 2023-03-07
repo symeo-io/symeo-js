@@ -22,7 +22,7 @@ const bootstrap = async () => {
   }
 };
 
-bootstrap().catch((error) => {
-  console.error(`${ERROR_PREFIX}: ${chalk.red(error)}`);
+bootstrap().catch((error: Error) => {
+  console.error(`${ERROR_PREFIX}: ${chalk.red(error.message)}`);
   process.exit(1);
 });

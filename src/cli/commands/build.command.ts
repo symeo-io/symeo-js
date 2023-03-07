@@ -18,10 +18,10 @@ export class BuildCommand extends AbstractCommand<BuildAction> {
         false,
       )
       .description('Build Symeo contract types.')
-      .action(async (command) => {
+      .action(async (options) => {
         const input = {
-          contractPath: command.contractFile,
-          forceRecreate: command.forceRecreate,
+          contractPath: options.contractFile,
+          forceRecreate: options.forceRecreate,
         };
         await this.action.handle(input);
       });
