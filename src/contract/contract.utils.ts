@@ -1,13 +1,9 @@
-import { ConfigurationContract, ConfigurationProperty } from './contract.types';
+import { Contract, ContractProperty } from './contract.types';
 
-export function isContractPropertyOptional(
-  contractProperty: ConfigurationProperty,
-) {
+export function isContractPropertyOptional(contractProperty: ContractProperty) {
   return contractProperty.optional === true;
 }
 
-export function isConfigProperty(
-  el: ConfigurationContract | ConfigurationProperty,
-) {
+export function isContractProperty(el: Contract | ContractProperty) {
   return el.type && typeof el.type === 'string';
 }

@@ -1,26 +1,29 @@
-import { ConfigurationContract, ConfigurationProperty } from './contract.types';
-import { isConfigProperty, isContractPropertyOptional } from './contract.utils';
+import { Contract, ContractProperty } from './contract.types';
+import {
+  isContractProperty,
+  isContractPropertyOptional,
+} from './contract.utils';
 
 export class ContractTypeChecker {
   public static checkContractTypeCompatibility(
-    configContract: ConfigurationContract,
-    config: any,
+    contract: Contract,
+    values: any,
     parentPath?: string,
   ): string[] {
     const errors: string[] = [];
-    Object.keys(configContract).forEach((propertyName) => {
-      const contractProperty = configContract[propertyName];
-      const valuesProperty = (config as any)[propertyName];
+    Object.keys(contract).forEach((propertyName) => {
+      const contractProperty = contract[propertyName];
+      const valuesProperty = (values as any)[propertyName];
 
-      if (!isConfigProperty(contractProperty) && !valuesProperty) {
+      if (!isContractProperty(contractProperty) && !valuesProperty) {
         errors.push(this.buildMissingPropertyError(propertyName, parentPath));
         return;
       }
 
-      if (!isConfigProperty(contractProperty) && !!valuesProperty) {
+      if (!isContractProperty(contractProperty) && !!valuesProperty) {
         errors.push(
           ...this.checkContractTypeCompatibility(
-            contractProperty as ConfigurationContract,
+            contractProperty as Contract,
             valuesProperty,
             this.buildParentPath(parentPath, propertyName),
           ),
@@ -30,7 +33,7 @@ export class ContractTypeChecker {
 
       if (
         valuesProperty === undefined &&
-        !isContractPropertyOptional(contractProperty as ConfigurationProperty)
+        !isContractPropertyOptional(contractProperty as ContractProperty)
       ) {
         errors.push(this.buildMissingPropertyError(propertyName, parentPath));
         return;
@@ -38,8 +41,8 @@ export class ContractTypeChecker {
 
       if (
         valuesProperty !== undefined &&
-        !this.contractPropertyAndConfigValueHaveSameType(
-          contractProperty as ConfigurationProperty,
+        !this.contractPropertyAndValueHaveSameType(
+          contractProperty as ContractProperty,
           valuesProperty,
         )
       ) {
@@ -57,16 +60,16 @@ export class ContractTypeChecker {
     return errors;
   }
 
-  private static contractPropertyAndConfigValueHaveSameType(
-    contractProperty: ConfigurationProperty,
-    configProperty: any,
+  private static contractPropertyAndValueHaveSameType(
+    contractProperty: ContractProperty,
+    valueProperty: any,
   ): boolean {
-    if (typeof configProperty === 'number') {
+    if (typeof valueProperty === 'number') {
       return (
         contractProperty.type === 'float' || contractProperty.type === 'integer'
       );
     }
-    return typeof configProperty === contractProperty.type;
+    return typeof valueProperty === contractProperty.type;
   }
 
   private static buildMissingPropertyError(
@@ -84,13 +87,13 @@ export class ContractTypeChecker {
     propertyName: string,
     parentPath: string | undefined,
     contractProperty: any,
-    configProperty: any,
+    valueProperty: any,
   ) {
     const displayedPropertyName = this.buildParentPath(
       parentPath,
       propertyName,
     );
-    return `Configuration property "${displayedPropertyName}" has type "${typeof configProperty}" while configuration contract defined "${displayedPropertyName}" as "${
+    return `Configuration property "${displayedPropertyName}" has type "${typeof valueProperty}" while configuration contract defined "${displayedPropertyName}" as "${
       contractProperty.type
     }".`;
   }

@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { AbstractCommand } from './abstract.command';
-import { DEFAULT_CONFIGURATION_CONTRACT_PATH } from './command.constants';
+import { DEFAULT_CONTRACT_PATH } from './command.constants';
 import { BuildAction } from '../actions/build.action';
 
 export class BuildCommand extends AbstractCommand<BuildAction> {
@@ -10,7 +10,7 @@ export class BuildCommand extends AbstractCommand<BuildAction> {
       .option(
         '-c, --contract-file <file>',
         'Configuration contract file',
-        DEFAULT_CONFIGURATION_CONTRACT_PATH,
+        DEFAULT_CONTRACT_PATH,
       )
       .option(
         '-r, --force-recreate',

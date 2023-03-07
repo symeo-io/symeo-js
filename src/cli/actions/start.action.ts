@@ -43,7 +43,7 @@ export class StartAction implements Action<StartActionInput> {
     );
     await spin(
       'Generating config',
-      ContractTypesGenerator.generateConfigLibrary(contract, forceRecreate),
+      ContractTypesGenerator.generateContractTypes(contract, forceRecreate),
     );
 
     const commandEnvVariables = {

@@ -1,15 +1,11 @@
-export type ConfigurationContract = {
-  [property: string]: ConfigurationContract | ConfigurationProperty;
+export type Contract = {
+  [property: string]: Contract | ContractProperty;
 };
 
-export type ConfigurationProperty = {
-  type: ConfigurationPropertyType;
+export type ContractProperty = {
+  type: ContractPropertyType;
   secret?: boolean;
   optional?: boolean;
 };
 
-export type ConfigurationPropertyType =
-  | 'string'
-  | 'integer'
-  | 'float'
-  | 'boolean';
+export type ContractPropertyType = 'string' | 'integer' | 'float' | 'boolean';

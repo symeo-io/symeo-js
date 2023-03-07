@@ -1,5 +1,5 @@
 import mkdirp from 'mkdirp';
-import { ConfigurationContract } from '../contract/contract.types';
+import { Contract } from '../contract/contract.types';
 import fsExtra from 'fs-extra';
 import { dir } from 'tmp-promise';
 import checksum from 'checksum';
@@ -14,13 +14,13 @@ export class ContractTypesGenerator {
   );
   static CHECKSUM_PATH: string = join(this.OUTPUT_PATH, './checksum');
 
-  public static async generateConfigLibrary(
-    contract: ConfigurationContract,
+  public static async generateContractTypes(
+    contract: Contract,
     forceRecreate = false,
   ) {
-    const configChecksum = checksum(JSON.stringify(contract));
+    const contractChecksum = checksum(JSON.stringify(contract));
 
-    if (forceRecreate || this.shouldRegenerateConfigLibrary(configChecksum)) {
+    if (forceRecreate || this.shouldRegenerateContractTypes(contractChecksum)) {
       await mkdirp(this.OUTPUT_PATH);
 
       const randomTmpDir = await this.tmpDir('symeo');
@@ -29,14 +29,14 @@ export class ContractTypesGenerator {
         contract,
       );
       await TypeScriptTranspiler.transpile(randomTmpDir, this.OUTPUT_PATH);
-      fsExtra.writeFileSync(this.CHECKSUM_PATH, configChecksum, 'utf8');
+      fsExtra.writeFileSync(this.CHECKSUM_PATH, contractChecksum, 'utf8');
     }
   }
 
-  private static shouldRegenerateConfigLibrary(configChecksum: string) {
+  private static shouldRegenerateContractTypes(contractChecksum: string) {
     return (
       !fsExtra.existsSync(this.CHECKSUM_PATH) ||
-      fsExtra.readFileSync(this.CHECKSUM_PATH, 'utf8') !== configChecksum
+      fsExtra.readFileSync(this.CHECKSUM_PATH, 'utf8') !== contractChecksum
     );
   }
 

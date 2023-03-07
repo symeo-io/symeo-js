@@ -20,7 +20,7 @@ export class BuildAction implements Action<BuildActionInput> {
     );
     await spin(
       'Generating config',
-      ContractTypesGenerator.generateConfigLibrary(contract, forceRecreate),
+      ContractTypesGenerator.generateContractTypes(contract, forceRecreate),
     );
   }
 }

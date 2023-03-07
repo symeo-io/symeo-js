@@ -6,12 +6,12 @@ import {
   DEFAULT_CONTRACT_PATH,
   DEFAULT_LOCAL_VALUES_PATH,
 } from './command.constants';
-import { StartAction } from '../actions/start.action';
+import { VerifyAction } from '../actions/verify.action';
 
-export class StartCommand extends AbstractCommand<StartAction> {
+export class VerifyCommand extends AbstractCommand<VerifyAction> {
   public load(program: Command): void {
     program
-      .command('start [command]')
+      .command('verify')
       .option(
         '-c, --contract-file <file>',
         'Configuration contract file',
@@ -34,9 +34,7 @@ export class StartCommand extends AbstractCommand<StartAction> {
         DEFAULT_LOCAL_VALUES_PATH,
       )
       .description('Build Symeo contract types.')
-      .action(async (startCommand, options, command) => {
-        const startCommandArgs = command.args.slice(1);
-
+      .action(async (options) => {
         const input = {
           contractPath: options.contractFile,
           forceRecreate: options.forceRecreate,
@@ -46,8 +44,6 @@ export class StartCommand extends AbstractCommand<StartAction> {
           }),
           apiUrl: options.apiUrl,
           apiKey: options.apiKey,
-          command: startCommand,
-          commandArgs: startCommandArgs,
         };
         await this.action.handle(input);
       });
