@@ -3,10 +3,10 @@ import YAML from 'yamljs';
 // @ts-ignore
 import { Config } from '.symeo-js/config/types';
 import fetch from 'sync-fetch';
-import { ConfigContractTypeChecker } from './ConfigContractTypeChecker';
-import { ContractLoader } from './ContractLoader';
+import { ConfigContractTypeChecker } from './configuration/ConfigContractTypeChecker';
+import { ContractLoader } from './configuration/ContractLoader';
 import chalk from 'chalk';
-import { ConfigInitializer } from './ConfigInitializer';
+import { ConfigInitializer } from './configuration/ConfigInitializer';
 
 let rawConfig: any;
 const apiUrl = process.env.SYMEO_API_URL;

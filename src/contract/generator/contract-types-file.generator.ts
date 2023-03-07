@@ -1,12 +1,12 @@
 import {
   ConfigurationContract,
   ConfigurationProperty,
-} from '../ConfigurationContract';
+} from '../contract.types';
 import { join } from 'path';
 import fsExtra from 'fs-extra';
 
-export class ConfigTypesGenerator {
-  public async generateTypesFile(
+export class ContractTypesFileGenerator {
+  public static async generateTypesFile(
     path: string,
     contract: ConfigurationContract,
   ) {
@@ -19,7 +19,9 @@ export class ConfigTypesGenerator {
     await fsExtra.writeFile(typesOutputPath, types);
   }
 
-  private contractToTypeScriptType(contract: ConfigurationContract): string {
+  private static contractToTypeScriptType(
+    contract: ConfigurationContract,
+  ): string {
     let result = '{\n';
 
     Object.keys(contract).forEach((propertyName) => {
@@ -41,7 +43,7 @@ export class ConfigTypesGenerator {
     return result;
   }
 
-  private generatePropertyTypeName(
+  private static generatePropertyTypeName(
     propertyName: string,
     contract: ConfigurationContract,
   ) {
@@ -53,7 +55,7 @@ export class ConfigTypesGenerator {
     return `"${propertyName}"${property.optional ? '?' : ''}`;
   }
 
-  private configPropertyToTypeScriptType(
+  private static configPropertyToTypeScriptType(
     configProperty: ConfigurationProperty,
   ) {
     switch (configProperty.type) {
@@ -67,7 +69,9 @@ export class ConfigTypesGenerator {
     }
   }
 
-  private isConfigProperty(el: ConfigurationContract | ConfigurationProperty) {
+  private static isConfigProperty(
+    el: ConfigurationContract | ConfigurationProperty,
+  ) {
     return el.type && typeof el.type === 'string';
   }
 }
