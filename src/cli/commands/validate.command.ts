@@ -6,12 +6,12 @@ import {
   DEFAULT_CONTRACT_PATH,
   DEFAULT_LOCAL_VALUES_PATH,
 } from './command.constants';
-import { VerifyAction } from '../actions/verify.action';
+import { ValidateAction } from '../actions/validate.action';
 
-export class VerifyCommand extends AbstractCommand<VerifyAction> {
+export class ValidateCommand extends AbstractCommand<ValidateAction> {
   public load(program: Command): void {
     program
-      .command('verify')
+      .command('validate')
       .option(
         '-c, --contract-file <file>',
         'Configuration contract file',
