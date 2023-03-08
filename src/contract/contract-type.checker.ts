@@ -115,7 +115,7 @@ export class ContractTypeChecker {
   }
 
   private isDefined(value: any): boolean {
-    return value !== undefined && value !== null;
+    return value !== undefined && value !== null && value !== '';
   }
 
   private isUndefined(value: any): boolean {
