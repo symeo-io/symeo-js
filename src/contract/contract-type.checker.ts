@@ -16,7 +16,7 @@ export class ContractTypeChecker {
 
       if (
         this.contractUtils.isContractProperty(contractProperty) &&
-        valuesProperty === undefined
+        this.isUndefined(valuesProperty)
       ) {
         errors.push(this.buildMissingPropertyError(propertyName, parentPath));
         return;
@@ -24,7 +24,7 @@ export class ContractTypeChecker {
 
       if (
         !this.contractUtils.isContractProperty(contractProperty) &&
-        valuesProperty !== undefined
+        this.isDefined(valuesProperty)
       ) {
         errors.push(
           ...this.checkContractTypeCompatibility(
@@ -37,7 +37,7 @@ export class ContractTypeChecker {
       }
 
       if (
-        valuesProperty === undefined &&
+        this.isUndefined(valuesProperty) &&
         !this.contractUtils.isContractPropertyOptional(
           contractProperty as ContractProperty,
         )
@@ -47,7 +47,7 @@ export class ContractTypeChecker {
       }
 
       if (
-        valuesProperty !== undefined &&
+        this.isDefined(valuesProperty) &&
         !this.contractPropertyAndValueHaveSameType(
           contractProperty as ContractProperty,
           valuesProperty,
@@ -112,5 +112,13 @@ export class ContractTypeChecker {
     return previousParentPath !== undefined
       ? previousParentPath + '.' + propertyName
       : propertyName;
+  }
+
+  private isDefined(value: any): boolean {
+    return value !== undefined && value !== null;
+  }
+
+  private isUndefined(value: any): boolean {
+    return !this.isDefined(value);
   }
 }
