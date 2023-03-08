@@ -1,15 +1,12 @@
-import {
-  ConfigurationContract,
-  ConfigurationProperty,
-} from '../ConfigurationContract';
+import { Contract, ContractProperty } from '../contract/contract.types';
 import { join } from 'path';
 import fsExtra from 'fs-extra';
+import { ContractUtils } from '../contract/contract.utils';
 
-export class ConfigTypesGenerator {
-  public async generateTypesFile(
-    path: string,
-    contract: ConfigurationContract,
-  ) {
+export class ContractTypesFileGenerator {
+  constructor(private readonly contractUtils: ContractUtils) {}
+
+  public async generateTypesFile(path: string, contract: Contract) {
     const typesOutputPath = join(path, './types.ts');
 
     const types = `export type Config = ${this.contractToTypeScriptType(
@@ -19,7 +16,7 @@ export class ConfigTypesGenerator {
     await fsExtra.writeFile(typesOutputPath, types);
   }
 
-  private contractToTypeScriptType(contract: ConfigurationContract): string {
+  private contractToTypeScriptType(contract: Contract): string {
     let result = '{\n';
 
     Object.keys(contract).forEach((propertyName) => {
@@ -29,9 +26,9 @@ export class ConfigTypesGenerator {
         contract,
       );
 
-      const body = this.isConfigProperty(property)
-        ? this.configPropertyToTypeScriptType(property as ConfigurationProperty)
-        : this.contractToTypeScriptType(property as ConfigurationContract);
+      const body = this.contractUtils.isContractProperty(property)
+        ? this.contractPropertyToTypeScriptType(property as ContractProperty)
+        : this.contractToTypeScriptType(property as Contract);
 
       result += `${propertyTypeName}: ${body};\n`;
     });
@@ -41,22 +38,17 @@ export class ConfigTypesGenerator {
     return result;
   }
 
-  private generatePropertyTypeName(
-    propertyName: string,
-    contract: ConfigurationContract,
-  ) {
+  private generatePropertyTypeName(propertyName: string, contract: Contract) {
     const property = contract[propertyName];
-    if (!this.isConfigProperty(property)) {
+    if (!this.contractUtils.isContractProperty(property)) {
       return `"${propertyName}"`;
     }
 
     return `"${propertyName}"${property.optional ? '?' : ''}`;
   }
 
-  private configPropertyToTypeScriptType(
-    configProperty: ConfigurationProperty,
-  ) {
-    switch (configProperty.type) {
+  private contractPropertyToTypeScriptType(property: ContractProperty) {
+    switch (property.type) {
       case 'boolean':
         return 'boolean';
       case 'string':
@@ -65,9 +57,5 @@ export class ConfigTypesGenerator {
       case 'integer':
         return 'number';
     }
-  }
-
-  private isConfigProperty(el: ConfigurationContract | ConfigurationProperty) {
-    return el.type && typeof el.type === 'string';
   }
 }

@@ -77,7 +77,7 @@ You can add a build configuration command to your package.json:
 ```json
 {
   "scripts": {
-    "build:config": "symeo-js"
+    "build:config": "symeo-js build"
   }
 }
 ```
@@ -89,19 +89,19 @@ And then run `npm run build:config` or `yarn build:config`
 Your configuration is then accessible with the import:
 
 ```typescript
-import { config } from 'symeo-js/config';
+import { config } from 'symeo-js';
 ```
 
 Or using require:
 
 ```javascript
-const { config } = require('symeo-js/config');
+const { config } = require('symeo-js');
 ```
 
 For example:
 
 ```typescript
-import { config } from 'symeo-js/config';
+import { config } from 'symeo-js';
 import { Client } from "postgres";
 
 export class DatabaseClient {
@@ -150,7 +150,7 @@ with:
 ```json
 {
   "scripts": {
-    "start": "symeo-js -- node dist/index.js"
+    "start": "symeo-js start -- node dist/index.js"
   }
 }
 ```
@@ -158,7 +158,7 @@ with:
 Or, directly from the command line:
 
 ```shell
-node_modules/.bin/symeo-js -- node dist/index.js
+node_modules/.bin/symeo-js start -- node dist/index.js
 ```
 
 ### Start application with configuration from Symeo platform
@@ -166,37 +166,89 @@ node_modules/.bin/symeo-js -- node dist/index.js
 After creating an environment and its api key in the [Symeo platform](https://app.symeo.io/), use this command in your package.json
 
 ```shell
-symeo-js --api-key $YOUR_ENVIRONMENT_API_KEY -- node index.js
+symeo-js start --api-key $YOUR_ENVIRONMENT_API_KEY -- node index.js
 ```
 
 Or, directly from the command line:
 
 ```shell
-node_modules/.bin/symeo-js --api-key $YOUR_ENVIRONMENT_API_KEY -- node index.js
+node_modules/.bin/symeo-js start --api-key $YOUR_ENVIRONMENT_API_KEY -- node index.js
 ```
 
 So the sdk fetch the values for the given environment and starts your application with those values.
 
 Follow the [Symeo platform documentation](https://docs.symeo.io/) for more details.
 
-## Symeo CLI options
+### Check your configuration is valid
 
-### `-c, --contract-file`
+In your CI or CD pipeline, run:
+
+```shell
+symeo-js validate --api-key $YOUR_ENVIRONMENT_API_KEY
+```
+
+Which will check if the values filled in the Symeo platform comply with your contract.
+
+## Symeo CLI commands
+
+### symeo-js build
+
+Build your typescript types from your contract file.
+
+#### `-c, --contract-file`
 
 The path to your configuration contract file. Default is `symeo.config.yml`.
 
-### `-f, --values-file`
+#### `-r, --force-recreate`
+
+By default, if contract stays identical, configuration won't be rebuilt to save time. Passing this option will force the rebuild of your configuration.
+
+### symeo-js start
+
+Start your application with your configuration values, either read from a local file or fetched from the Symeo platform.
+
+#### `-c, --contract-file`
+
+The path to your configuration contract file. Default is `symeo.config.yml`.
+
+#### `-f, --values-file`
 
 The path to your local values file. Default is `symeo.local.yml`.
 
-### `-k, --api-key`
+#### `-k, --api-key`
 
 The environment api key to use to fetch values from Symeo platform. If empty, values will be fetched from local value file (`symeo.local.yml` by default). If specified, parameter `-f, --values-file` is ignored.
 
-### `-a, --api-url`
+#### `-a, --api-url`
 
 The api endpoint used to fetch your configuration with the api key. Default is `https://api.symeo.io/api/v1/values`.
 
-### `-r, --force-recreate`
+#### `-r, --force-recreate`
+
+By default, if contract stays identical, configuration won't be rebuilt to save time. Passing this option will force the rebuild of your configuration.
+
+
+### symeo-js validate
+
+
+Check that with your configuration values, either read from a local file or fetched from the Symeo platform, match your contract.
+
+#### `-c, --contract-file`
+
+The path to your configuration contract file. Default is `symeo.config.yml`.
+
+#### `-f, --values-file`
+
+The path to your local values file. Default is `symeo.local.yml`.
+
+#### `-k, --api-key`
+
+The environment api key to use to fetch values from Symeo platform. If empty, values will be fetched from local value file (`symeo.local.yml` by default). If specified, parameter `-f, --values-file` is ignored.
+
+#### `-a, --api-url`
+
+The api endpoint used to fetch your configuration with the api key. Default is `https://api.symeo.io/api/v1/values`.
+
+#### `-r, --force-recreate`
 
 By default, if contract stays identical, configuration won't be rebuilt to save time. Passing this option will force the rebuild of your configuration.

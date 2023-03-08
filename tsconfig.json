@@ -12,8 +12,11 @@
     "exactOptionalPropertyTypes": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "baseUrl": "."
+    "resolveJsonModule": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "tsBuildInfoFile": "dist/tsconfig.tsbuildinfo"
   },
-  "include": ["src/cli", "src/configuration", "tests"],
-  "exclude": ["dist", "node_modules", "config"],
+  "include": ["src", "tests"],
+  "exclude": ["dist", "node_modules"],
 }

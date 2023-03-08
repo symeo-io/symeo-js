@@ -7,9 +7,9 @@ export class TypeScriptTranspiler {
   glob = promisify(originalGlob);
   outputs = [{ module: tsc.ModuleKind.CommonJS, directory: './' }];
 
-  async transpile(configPath: string, outputPath: string): Promise<void> {
+  async transpile(tsPath: string, outputPath: string): Promise<void> {
     const tsFiles = await this.glob('**/*.ts', {
-      cwd: configPath,
+      cwd: tsPath,
       absolute: true,
     });
 
@@ -23,13 +23,13 @@ export class TypeScriptTranspiler {
           target,
           outDir,
           module,
-          rootDir: configPath,
+          rootDir: tsPath,
           resolveJsonModule: true,
           esModuleInterop: true,
           moduleResolution: tsc.ModuleResolutionKind.NodeJs,
         };
         const host = tsc.createCompilerHost(options);
-        host.getCurrentDirectory = () => configPath;
+        host.getCurrentDirectory = () => tsPath;
 
         const program = tsc.createProgram(tsFiles, options, host);
         let diagnostics = tsc.getPreEmitDiagnostics(program);

@@ -1,31 +1,35 @@
 import { faker } from '@faker-js/faker';
-import { ConfigContractTypeChecker } from 'src/configuration/ConfigContractTypeChecker';
-import { ConfigurationPropertyType } from 'src/configuration/ConfigurationContract';
+import { ContractTypeChecker } from 'src/contract/contract-type.checker';
+import { ContractPropertyType } from 'src/contract/contract.types';
+import { ContractUtils } from 'src/contract/contract.utils';
 
-describe('ConfigContractTypeChecker', () => {
+describe('ContractTypeChecker', () => {
+  const contractUtils = new ContractUtils();
+  const contractTypeChecker = new ContractTypeChecker(contractUtils);
+
   describe('checkContractTypeCompatibility', () => {
     const configContract = {
       database: {
         host: {
-          type: 'string' as ConfigurationPropertyType,
+          type: 'string' as ContractPropertyType,
           optional: true,
         },
         password: {
-          type: 'string' as ConfigurationPropertyType,
+          type: 'string' as ContractPropertyType,
           optional: true,
         },
         responseLimit: {
-          type: 'float' as ConfigurationPropertyType,
+          type: 'float' as ContractPropertyType,
         },
       },
       vcsProvider: {
         paginationLength: {
-          type: 'integer' as ConfigurationPropertyType,
+          type: 'integer' as ContractPropertyType,
         },
       },
       auth0: {
         isAdmin: {
-          type: 'boolean' as ConfigurationPropertyType,
+          type: 'boolean' as ContractPropertyType,
         },
       },
     };
@@ -48,7 +52,7 @@ describe('ConfigContractTypeChecker', () => {
 
       //Then
       expect(
-        ConfigContractTypeChecker.checkContractTypeCompatibility(
+        contractTypeChecker.checkContractTypeCompatibility(
           configContract,
           config,
         ),
@@ -75,7 +79,7 @@ describe('ConfigContractTypeChecker', () => {
 
       //Then
       expect(
-        ConfigContractTypeChecker.checkContractTypeCompatibility(
+        contractTypeChecker.checkContractTypeCompatibility(
           configContract,
           config,
         ),
@@ -104,7 +108,7 @@ describe('ConfigContractTypeChecker', () => {
 
       //Then
       expect(
-        ConfigContractTypeChecker.checkContractTypeCompatibility(
+        contractTypeChecker.checkContractTypeCompatibility(
           configContract,
           config,
         ),
@@ -133,7 +137,7 @@ describe('ConfigContractTypeChecker', () => {
 
       //Then
       expect(
-        ConfigContractTypeChecker.checkContractTypeCompatibility(
+        contractTypeChecker.checkContractTypeCompatibility(
           configContract,
           config,
         ),
