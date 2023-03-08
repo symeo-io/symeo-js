@@ -88,7 +88,7 @@ jobs:
           key: dependency-cache-{{ checksum "~/symeo-js/yarn.lock" }}
       - run:
           name: Build
-          command: yarn build:cli && yarn build:config
+          command: yarn build
       - run:
           name: Authenticate to registry
           command: echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> ~/symeo-js/.npmrc
