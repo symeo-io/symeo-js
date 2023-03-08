@@ -1,10 +1,12 @@
 import { Contract, ContractProperty } from '../contract/contract.types';
 import { join } from 'path';
 import fsExtra from 'fs-extra';
-import { isContractProperty } from '../contract/contract.utils';
+import { ContractUtils } from '../contract/contract.utils';
 
 export class ContractTypesFileGenerator {
-  public static async generateTypesFile(path: string, contract: Contract) {
+  constructor(private readonly contractUtils: ContractUtils) {}
+
+  public async generateTypesFile(path: string, contract: Contract) {
     const typesOutputPath = join(path, './types.ts');
 
     const types = `export type Config = ${this.contractToTypeScriptType(
@@ -14,7 +16,7 @@ export class ContractTypesFileGenerator {
     await fsExtra.writeFile(typesOutputPath, types);
   }
 
-  private static contractToTypeScriptType(contract: Contract): string {
+  private contractToTypeScriptType(contract: Contract): string {
     let result = '{\n';
 
     Object.keys(contract).forEach((propertyName) => {
@@ -24,7 +26,7 @@ export class ContractTypesFileGenerator {
         contract,
       );
 
-      const body = isContractProperty(property)
+      const body = this.contractUtils.isContractProperty(property)
         ? this.contractPropertyToTypeScriptType(property as ContractProperty)
         : this.contractToTypeScriptType(property as Contract);
 
@@ -36,19 +38,16 @@ export class ContractTypesFileGenerator {
     return result;
   }
 
-  private static generatePropertyTypeName(
-    propertyName: string,
-    contract: Contract,
-  ) {
+  private generatePropertyTypeName(propertyName: string, contract: Contract) {
     const property = contract[propertyName];
-    if (!isContractProperty(property)) {
+    if (!this.contractUtils.isContractProperty(property)) {
       return `"${propertyName}"`;
     }
 
     return `"${propertyName}"${property.optional ? '?' : ''}`;
   }
 
-  private static contractPropertyToTypeScriptType(property: ContractProperty) {
+  private contractPropertyToTypeScriptType(property: ContractProperty) {
     switch (property.type) {
       case 'boolean':
         return 'boolean';

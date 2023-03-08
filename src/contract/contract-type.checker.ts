@@ -1,11 +1,10 @@
 import { Contract, ContractProperty } from './contract.types';
-import {
-  isContractProperty,
-  isContractPropertyOptional,
-} from './contract.utils';
+import { ContractUtils } from './contract.utils';
 
 export class ContractTypeChecker {
-  public static checkContractTypeCompatibility(
+  constructor(private readonly contractUtils: ContractUtils) {}
+
+  public checkContractTypeCompatibility(
     contract: Contract,
     values: any,
     parentPath?: string,
@@ -15,12 +14,18 @@ export class ContractTypeChecker {
       const contractProperty = contract[propertyName];
       const valuesProperty = (values as any)[propertyName];
 
-      if (!isContractProperty(contractProperty) && !valuesProperty) {
+      if (
+        this.contractUtils.isContractProperty(contractProperty) &&
+        valuesProperty === undefined
+      ) {
         errors.push(this.buildMissingPropertyError(propertyName, parentPath));
         return;
       }
 
-      if (!isContractProperty(contractProperty) && !!valuesProperty) {
+      if (
+        !this.contractUtils.isContractProperty(contractProperty) &&
+        valuesProperty !== undefined
+      ) {
         errors.push(
           ...this.checkContractTypeCompatibility(
             contractProperty as Contract,
@@ -33,7 +38,9 @@ export class ContractTypeChecker {
 
       if (
         valuesProperty === undefined &&
-        !isContractPropertyOptional(contractProperty as ContractProperty)
+        !this.contractUtils.isContractPropertyOptional(
+          contractProperty as ContractProperty,
+        )
       ) {
         errors.push(this.buildMissingPropertyError(propertyName, parentPath));
         return;
@@ -60,7 +67,7 @@ export class ContractTypeChecker {
     return errors;
   }
 
-  private static contractPropertyAndValueHaveSameType(
+  private contractPropertyAndValueHaveSameType(
     contractProperty: ContractProperty,
     valueProperty: any,
   ): boolean {
@@ -72,7 +79,7 @@ export class ContractTypeChecker {
     return typeof valueProperty === contractProperty.type;
   }
 
-  private static buildMissingPropertyError(
+  private buildMissingPropertyError(
     propertyName: string,
     parentPath: string | undefined,
   ): string {
@@ -83,7 +90,7 @@ export class ContractTypeChecker {
     return `The property "${displayedPropertyName}" of your configuration contract is missing in your configuration values.`;
   }
 
-  private static buildWrongTypeError(
+  private buildWrongTypeError(
     propertyName: string,
     parentPath: string | undefined,
     contractProperty: any,
@@ -98,7 +105,7 @@ export class ContractTypeChecker {
     }".`;
   }
 
-  private static buildParentPath(
+  private buildParentPath(
     previousParentPath: string | undefined,
     propertyName: string,
   ) {

@@ -8,13 +8,15 @@ import { ContractTypesFileGenerator } from './contract-types-file.generator';
 import { TypeScriptTranspiler } from './typescript.transpiler';
 
 export class ContractTypesGenerator {
-  static OUTPUT_PATH: string = join(
-    process.cwd(),
-    'node_modules/.symeo-js/config',
-  );
-  static CHECKSUM_PATH: string = join(this.OUTPUT_PATH, './checksum');
+  OUTPUT_PATH: string = join(process.cwd(), 'node_modules/.symeo-js/config');
+  CHECKSUM_PATH: string = join(this.OUTPUT_PATH, './checksum');
 
-  public static async generateContractTypes(
+  constructor(
+    private readonly contractTypesFileGenerator: ContractTypesFileGenerator,
+    private readonly typeScriptTranspiler: TypeScriptTranspiler,
+  ) {}
+
+  public async generateContractTypes(
     contract: Contract,
     forceRecreate = false,
   ) {
@@ -24,23 +26,23 @@ export class ContractTypesGenerator {
       await mkdirp(this.OUTPUT_PATH);
 
       const randomTmpDir = await this.tmpDir('symeo');
-      await ContractTypesFileGenerator.generateTypesFile(
+      await this.contractTypesFileGenerator.generateTypesFile(
         randomTmpDir,
         contract,
       );
-      await TypeScriptTranspiler.transpile(randomTmpDir, this.OUTPUT_PATH);
+      await this.typeScriptTranspiler.transpile(randomTmpDir, this.OUTPUT_PATH);
       fsExtra.writeFileSync(this.CHECKSUM_PATH, contractChecksum, 'utf8');
     }
   }
 
-  private static shouldRegenerateContractTypes(contractChecksum: string) {
+  private shouldRegenerateContractTypes(contractChecksum: string) {
     return (
       !fsExtra.existsSync(this.CHECKSUM_PATH) ||
       fsExtra.readFileSync(this.CHECKSUM_PATH, 'utf8') !== contractChecksum
     );
   }
 
-  private static async tmpDir(prefix: string) {
+  private async tmpDir(prefix: string) {
     const { path } = await dir({ prefix });
     return path;
   }

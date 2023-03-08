@@ -3,30 +3,30 @@ import { anyString, anything, instance, mock, verify } from 'ts-mockito';
 import fsExtra from 'fs-extra';
 import { faker } from '@faker-js/faker';
 import SpyInstance = jest.SpyInstance;
-import { ConfigTypesGenerator } from 'src/cli/config-generator/ConfigTypesGenerator';
-import { TypeScriptTranspiler } from 'src/cli/config-generator/TypeScriptTranspiler';
-import { ConfigLibraryGenerator } from 'src/cli/config-generator/ConfigLibraryGenerator';
-import { ConfigurationContract } from 'src/cli/ConfigurationContract';
+import { ContractTypesFileGenerator } from 'src/contract-type-generator/contract-types-file.generator';
+import { TypeScriptTranspiler } from 'src/contract-type-generator/typescript.transpiler';
+import { ContractTypesGenerator } from 'src/contract-type-generator/contract-types.generator';
+import { Contract } from 'src/contract/contract.types';
 import mkdirp from 'mkdirp';
 
 jest.mock('mkdirp');
 const mockedMkdirp = <jest.Mock<typeof mkdirp>>(<unknown>mkdirp);
 
 describe('ConfigLibrary', () => {
-  describe('generateConfigLibrary', () => {
+  describe('generateContractTypes', () => {
     let mockedFsExtraExistSync: SpyInstance;
     let mockedFsExtraReadFileSync: SpyInstance;
     let mockedFsExtraWriteFileSync: SpyInstance;
 
-    let mockedConfigTypesGenerator: ConfigTypesGenerator;
-    let configTypesGenerator: ConfigTypesGenerator;
+    let mockedContractTypesFileGenerator: ContractTypesFileGenerator;
+    let contractTypesFileGenerator: ContractTypesFileGenerator;
 
     let mockedConfigTranspiler: TypeScriptTranspiler;
     let configTranspiler: TypeScriptTranspiler;
 
-    let configLibraryGenerator: ConfigLibraryGenerator;
+    let contractTypesGenerator: ContractTypesGenerator;
 
-    const configurationContract: ConfigurationContract = {
+    const configurationContract: Contract = {
       aws: {
         secretAccessKey: {
           type: 'string',
@@ -39,8 +39,8 @@ describe('ConfigLibrary', () => {
     };
 
     beforeEach(() => {
-      mockedConfigTypesGenerator = mock(ConfigTypesGenerator);
-      configTypesGenerator = instance(mockedConfigTypesGenerator);
+      mockedContractTypesFileGenerator = mock(ContractTypesFileGenerator);
+      contractTypesFileGenerator = instance(mockedContractTypesFileGenerator);
 
       mockedConfigTranspiler = mock(TypeScriptTranspiler);
       configTranspiler = instance(mockedConfigTranspiler);
@@ -53,8 +53,8 @@ describe('ConfigLibrary', () => {
 
       mockedMkdirp.mockImplementation();
 
-      configLibraryGenerator = new ConfigLibraryGenerator(
-        configTypesGenerator,
+      contractTypesGenerator = new ContractTypesGenerator(
+        contractTypesFileGenerator,
         configTranspiler,
       );
     });
@@ -71,11 +71,14 @@ describe('ConfigLibrary', () => {
       mockedFsExtraReadFileSync.mockImplementation(() =>
         checksum(JSON.stringify(configurationContract)),
       );
-      await configLibraryGenerator.generateConfigLibrary(configurationContract);
+      await contractTypesGenerator.generateContractTypes(configurationContract);
 
       // Then
       verify(
-        mockedConfigTypesGenerator.generateTypesFile(anyString(), anything()),
+        mockedContractTypesFileGenerator.generateTypesFile(
+          anyString(),
+          anything(),
+        ),
       ).never();
       expect(mockedFsExtraWriteFileSync).not.toHaveBeenCalled();
     });
@@ -87,18 +90,18 @@ describe('ConfigLibrary', () => {
         faker.name.firstName(),
       );
 
-      await configLibraryGenerator.generateConfigLibrary(configurationContract);
+      await contractTypesGenerator.generateContractTypes(configurationContract);
 
       // Then
       verify(
-        mockedConfigTypesGenerator.generateTypesFile(
+        mockedContractTypesFileGenerator.generateTypesFile(
           anyString(),
           configurationContract,
         ),
       ).once();
       expect(mockedFsExtraWriteFileSync).toHaveBeenCalledTimes(1);
       expect(mockedFsExtraWriteFileSync).toHaveBeenCalledWith(
-        configLibraryGenerator.CHECKSUM_PATH,
+        contractTypesGenerator.CHECKSUM_PATH,
         checksum(JSON.stringify(configurationContract)),
         'utf8',
       );

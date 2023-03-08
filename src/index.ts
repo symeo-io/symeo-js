@@ -12,6 +12,13 @@ import {
   LOCAL_VALUES_FILE_VARIABLE_NAME,
 } from './cli/actions/action.contants';
 import { RawValuesFetcher } from './values/raw-values.fetcher';
+import { ContractUtils } from './contract/contract.utils';
+
+const rawValuesFetcher = new RawValuesFetcher();
+const contractLoader = new ContractLoader();
+const contractUtils = new ContractUtils();
+const valuesInitializer = new ValuesInitializer(contractUtils);
+const contractTypeChecker = new ContractTypeChecker(contractUtils);
 
 let rawValues: any;
 const apiUrl = process.env[API_URL_VARIABLE_NAME];
@@ -20,9 +27,9 @@ const localValuesPath = process.env[LOCAL_VALUES_FILE_VARIABLE_NAME];
 const contractPath = process.env[CONTRACT_FILE_VARIABLE_NAME];
 
 if (apiUrl && apiKey) {
-  rawValues = RawValuesFetcher.fetchFromApi(apiUrl, apiKey);
+  rawValues = rawValuesFetcher.fetchFromApi(apiUrl, apiKey);
 } else if (localValuesPath) {
-  rawValues = RawValuesFetcher.fetchFromFile(localValuesPath);
+  rawValues = rawValuesFetcher.fetchFromFile(localValuesPath);
 } else {
   throw new Error(
     'Missing api key or local configuration file. Are you sure you wrapped you command with symeo cli? e.g: symeo -- node index.js',
@@ -35,10 +42,10 @@ if (!contractPath) {
   );
 }
 
-const contract = ContractLoader.loadContractFile(contractPath);
-const config: Config = ValuesInitializer.initializeValues(contract, rawValues);
+const contract = contractLoader.loadContractFile(contractPath);
+const config: Config = valuesInitializer.initializeValues(contract, rawValues);
 
-const errors = ContractTypeChecker.checkContractTypeCompatibility(
+const errors = contractTypeChecker.checkContractTypeCompatibility(
   contract,
   config,
 );

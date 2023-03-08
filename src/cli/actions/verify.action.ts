@@ -6,6 +6,9 @@ import { ContractTypesGenerator } from '../../contract-type-generator/contract-t
 import { RawValuesFetcher } from '../../values/raw-values.fetcher';
 import { ValuesInitializer } from '../../values/values.initializer';
 import { ContractTypeChecker } from '../../contract/contract-type.checker';
+import { ContractUtils } from '../../contract/contract.utils';
+import { ContractTypesFileGenerator } from '../../contract-type-generator/contract-types-file.generator';
+import { TypeScriptTranspiler } from '../../contract-type-generator/typescript.transpiler';
 
 export type StartActionInput = {
   contractPath: string;
@@ -16,6 +19,23 @@ export type StartActionInput = {
 };
 
 export class VerifyAction implements Action<StartActionInput> {
+  protected readonly contractLoader = new ContractLoader();
+  protected readonly contractUtils = new ContractUtils();
+  protected readonly contractTypesFileGenerator =
+    new ContractTypesFileGenerator(this.contractUtils);
+  protected readonly typeScriptTranspiler = new TypeScriptTranspiler();
+  protected readonly contractTypesGenerator = new ContractTypesGenerator(
+    this.contractTypesFileGenerator,
+    this.typeScriptTranspiler,
+  );
+  protected readonly rawValuesFetcher = new RawValuesFetcher();
+  protected readonly valuesInitializer = new ValuesInitializer(
+    this.contractUtils,
+  );
+  protected readonly contractTypeChecker = new ContractTypeChecker(
+    this.contractUtils,
+  );
+
   async handle({
     contractPath,
     forceRecreate,
@@ -23,25 +43,28 @@ export class VerifyAction implements Action<StartActionInput> {
     apiUrl,
     localValuesPath,
   }: StartActionInput): Promise<void> {
-    const contract = ContractLoader.loadContractFile(contractPath);
+    const contract = this.contractLoader.loadContractFile(contractPath);
     console.log(
       `Loaded configuration contract from ${chalk.green(contractPath)}`,
     );
     await spin(
       'Generating config',
-      ContractTypesGenerator.generateContractTypes(contract, forceRecreate),
+      this.contractTypesGenerator.generateContractTypes(
+        contract,
+        forceRecreate,
+      ),
     );
 
     let rawValues: any;
     if (apiUrl && apiKey) {
-      rawValues = RawValuesFetcher.fetchFromApi(apiUrl, apiKey);
+      rawValues = this.rawValuesFetcher.fetchFromApi(apiUrl, apiKey);
     } else if (localValuesPath) {
-      rawValues = RawValuesFetcher.fetchFromFile(localValuesPath);
+      rawValues = this.rawValuesFetcher.fetchFromFile(localValuesPath);
     }
 
-    const values = ValuesInitializer.initializeValues(contract, rawValues);
+    const values = this.valuesInitializer.initializeValues(contract, rawValues);
 
-    const errors = ContractTypeChecker.checkContractTypeCompatibility(
+    const errors = this.contractTypeChecker.checkContractTypeCompatibility(
       contract,
       values,
     );

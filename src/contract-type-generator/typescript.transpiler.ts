@@ -4,10 +4,10 @@ import { promisify } from 'util';
 import originalGlob from 'glob';
 
 export class TypeScriptTranspiler {
-  static glob = promisify(originalGlob);
-  static outputs = [{ module: tsc.ModuleKind.CommonJS, directory: './' }];
+  glob = promisify(originalGlob);
+  outputs = [{ module: tsc.ModuleKind.CommonJS, directory: './' }];
 
-  static async transpile(tsPath: string, outputPath: string): Promise<void> {
+  async transpile(tsPath: string, outputPath: string): Promise<void> {
     const tsFiles = await this.glob('**/*.ts', {
       cwd: tsPath,
       absolute: true,
@@ -51,7 +51,7 @@ export class TypeScriptTranspiler {
     );
   }
 
-  private static stringifyDiagnostic(diagnostic: tsc.Diagnostic) {
+  private stringifyDiagnostic(diagnostic: tsc.Diagnostic) {
     if (diagnostic.file) {
       const { line, character } = tsc.getLineAndCharacterOfPosition(
         diagnostic.file,

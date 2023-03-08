@@ -10,6 +10,9 @@ import {
   CONTRACT_FILE_VARIABLE_NAME,
   LOCAL_VALUES_FILE_VARIABLE_NAME,
 } from './action.contants';
+import { ContractUtils } from '../../contract/contract.utils';
+import { ContractTypesFileGenerator } from '../../contract-type-generator/contract-types-file.generator';
+import { TypeScriptTranspiler } from '../../contract-type-generator/typescript.transpiler';
 
 export type StartActionInput = {
   contractPath: string;
@@ -22,6 +25,16 @@ export type StartActionInput = {
 };
 
 export class StartAction implements Action<StartActionInput> {
+  protected readonly contractLoader = new ContractLoader();
+  protected readonly contractUtils = new ContractUtils();
+  protected readonly contractTypesFileGenerator =
+    new ContractTypesFileGenerator(this.contractUtils);
+  protected readonly typeScriptTranspiler = new TypeScriptTranspiler();
+  protected readonly contractTypesGenerator = new ContractTypesGenerator(
+    this.contractTypesFileGenerator,
+    this.typeScriptTranspiler,
+  );
+
   async handle({
     contractPath,
     forceRecreate,
@@ -37,13 +50,16 @@ export class StartAction implements Action<StartActionInput> {
       );
     }
 
-    const contract = ContractLoader.loadContractFile(contractPath);
+    const contract = this.contractLoader.loadContractFile(contractPath);
     console.log(
       `Loaded configuration contract from ${chalk.green(contractPath)}`,
     );
     await spin(
       'Generating config',
-      ContractTypesGenerator.generateContractTypes(contract, forceRecreate),
+      this.contractTypesGenerator.generateContractTypes(
+        contract,
+        forceRecreate,
+      ),
     );
 
     const commandEnvVariables = {

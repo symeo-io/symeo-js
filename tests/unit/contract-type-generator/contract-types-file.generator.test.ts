@@ -2,13 +2,16 @@ import { join } from 'path';
 import fsExtra from 'fs-extra';
 import SpyInstance = jest.SpyInstance;
 import { dir } from 'tmp-promise';
-import { ConfigTypesGenerator } from 'src/cli/config-generator/ConfigTypesGenerator';
-import { ConfigurationPropertyType } from 'src/cli/ConfigurationContract';
+import { ContractTypesFileGenerator } from 'src/contract-type-generator/contract-types-file.generator';
+import { ContractPropertyType } from 'src/contract/contract.types';
+import { ContractUtils } from 'src/contract/contract.utils';
 
-describe('ConfigTypes', () => {
+describe('ContractTypesFileGenerator', () => {
   describe('generateTypesFile', () => {
     let mockTypesOutputPath: string;
-    const configTypes: ConfigTypesGenerator = new ConfigTypesGenerator();
+    const contractUtils = new ContractUtils();
+    const contractTypesFileGenerator: ContractTypesFileGenerator =
+      new ContractTypesFileGenerator(contractUtils);
     let mockWriteFile: SpyInstance;
 
     beforeEach(async () => {
@@ -30,7 +33,10 @@ describe('ConfigTypes', () => {
 ;`;
 
       // When
-      configTypes.generateTypesFile(mockTypesOutputPath, configurationContract);
+      contractTypesFileGenerator.generateTypesFile(
+        mockTypesOutputPath,
+        configurationContract,
+      );
 
       // Then
       expect(mockWriteFile).toBeCalledWith(
@@ -44,7 +50,7 @@ describe('ConfigTypes', () => {
       const configurationContract = {
         database: {
           secretAccessKey: {
-            type: 'string' as ConfigurationPropertyType,
+            type: 'string' as ContractPropertyType,
             optional: true,
           },
         },
@@ -59,7 +65,10 @@ describe('ConfigTypes', () => {
 ;`;
 
       // When
-      configTypes.generateTypesFile(mockTypesOutputPath, configurationContract);
+      contractTypesFileGenerator.generateTypesFile(
+        mockTypesOutputPath,
+        configurationContract,
+      );
 
       // Then
       expect(mockWriteFile).toBeCalledWith(
@@ -73,20 +82,20 @@ describe('ConfigTypes', () => {
       const configurationContract = {
         database: {
           secretAccessKey: {
-            type: 'string' as ConfigurationPropertyType,
+            type: 'string' as ContractPropertyType,
             optional: true,
           },
           accessKeyId: {
-            type: 'string' as ConfigurationPropertyType,
+            type: 'string' as ContractPropertyType,
             optional: true,
           },
           region: {
-            type: 'string' as ConfigurationPropertyType,
+            type: 'string' as ContractPropertyType,
           },
         },
         vcsProvider: {
           paginationLength: {
-            type: 'integer' as ConfigurationPropertyType,
+            type: 'integer' as ContractPropertyType,
             optional: true,
           },
         },
@@ -107,7 +116,10 @@ describe('ConfigTypes', () => {
 ;`;
 
       // When
-      configTypes.generateTypesFile(mockTypesOutputPath, configurationContract);
+      contractTypesFileGenerator.generateTypesFile(
+        mockTypesOutputPath,
+        configurationContract,
+      );
 
       // Then
       expect(mockWriteFile).toBeCalledWith(
