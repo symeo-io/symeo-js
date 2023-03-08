@@ -1,31 +1,35 @@
-import { ConfigurationPropertyType } from 'src/configuration/ConfigurationContract';
-import { ConfigInitializer } from 'src/configuration/ConfigInitializer';
+import { ContractPropertyType } from 'src/contract/contract.types';
+import { ValuesInitializer } from 'src/values/values.initializer';
 import { faker } from '@faker-js/faker';
+import { ContractUtils } from 'src/contract/contract.utils';
 
-describe('ConfigInitializer', () => {
-  describe('initializeConfig', () => {
+describe('ValuesInitializer', () => {
+  const contractUtils = new ContractUtils();
+  const valuesInitializer = new ValuesInitializer(contractUtils);
+
+  describe('initializeValues', () => {
     const configContract = {
       database: {
         host: {
-          type: 'string' as ConfigurationPropertyType,
+          type: 'string' as ContractPropertyType,
           optional: true,
         },
         password: {
-          type: 'string' as ConfigurationPropertyType,
+          type: 'string' as ContractPropertyType,
           optional: true,
         },
         responseLimit: {
-          type: 'float' as ConfigurationPropertyType,
+          type: 'float' as ContractPropertyType,
         },
       },
       vcsProvider: {
         paginationLength: {
-          type: 'integer' as ConfigurationPropertyType,
+          type: 'integer' as ContractPropertyType,
         },
       },
       auth0: {
         isAdmin: {
-          type: 'boolean' as ConfigurationPropertyType,
+          type: 'boolean' as ContractPropertyType,
         },
       },
     };
@@ -36,7 +40,7 @@ describe('ConfigInitializer', () => {
 
       //Then
       expect(
-        ConfigInitializer.initializeConfig(configContract, config),
+        valuesInitializer.initializeValues(configContract, config),
       ).toEqual({
         database: {
           host: undefined,
@@ -66,7 +70,7 @@ describe('ConfigInitializer', () => {
 
       //Then
       expect(
-        ConfigInitializer.initializeConfig(configContract, config),
+        valuesInitializer.initializeValues(configContract, config),
       ).toEqual({
         database: {
           host: config.database.host,
