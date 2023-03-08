@@ -1,7 +1,6 @@
 import chalk from 'chalk';
 import { Action } from './action';
 import { ContractLoader } from '../../contract/contract.loader';
-import { spin } from '../ui/spin';
 import { ContractTypesGenerator } from '../../contract-type-generator/contract-types.generator';
 import { RawValuesFetcher } from '../../values/raw-values.fetcher';
 import { ValuesInitializer } from '../../values/values.initializer';
@@ -12,7 +11,6 @@ import { TypeScriptTranspiler } from '../../contract-type-generator/typescript.t
 
 export type StartActionInput = {
   contractPath: string;
-  forceRecreate: boolean;
   apiUrl: string;
   apiKey?: string;
   localValuesPath: string;
@@ -38,7 +36,6 @@ export class ValidateAction implements Action<StartActionInput> {
 
   async handle({
     contractPath,
-    forceRecreate,
     apiKey,
     apiUrl,
     localValuesPath,
@@ -46,13 +43,6 @@ export class ValidateAction implements Action<StartActionInput> {
     const contract = this.contractLoader.loadContractFile(contractPath);
     console.log(
       `Loaded configuration contract from ${chalk.green(contractPath)}`,
-    );
-    await spin(
-      'Generating config',
-      this.contractTypesGenerator.generateContractTypes(
-        contract,
-        forceRecreate,
-      ),
     );
 
     let rawValues: any;

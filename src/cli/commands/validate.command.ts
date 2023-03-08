@@ -17,11 +17,6 @@ export class ValidateCommand extends AbstractCommand<ValidateAction> {
         'Configuration contract file',
         DEFAULT_CONTRACT_PATH,
       )
-      .option(
-        '-r, --force-recreate',
-        'Force config creation even if contract is identical',
-        false,
-      )
       .option('-k, --api-key <key>', 'API Key')
       .option(
         '-a, --api-url <url>',
@@ -37,7 +32,6 @@ export class ValidateCommand extends AbstractCommand<ValidateAction> {
       .action(async (options) => {
         const input = {
           contractPath: options.contractFile,
-          forceRecreate: options.forceRecreate,
           localValuesPath: this.joinPaths({
             cwd: process.cwd(),
             path: options.valuesFile,

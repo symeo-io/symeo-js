@@ -248,7 +248,3 @@ The environment api key to use to fetch values from Symeo platform. If empty, va
 #### `-a, --api-url`
 
 The api endpoint used to fetch your configuration with the api key. Default is `https://api.symeo.io/api/v1/values`.
-
-#### `-r, --force-recreate`
-
-By default, if contract stays identical, configuration won't be rebuilt to save time. Passing this option will force the rebuild of your configuration.
