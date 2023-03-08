@@ -15,7 +15,7 @@ export class ContractTypeChecker {
       const valuesProperty = (values as any)[propertyName];
 
       if (
-        this.contractUtils.isContractProperty(contractProperty) &&
+        !this.contractUtils.isContractProperty(contractProperty) &&
         this.isUndefined(valuesProperty)
       ) {
         errors.push(this.buildMissingPropertyError(propertyName, parentPath));

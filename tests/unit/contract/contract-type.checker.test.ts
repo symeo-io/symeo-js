@@ -143,5 +143,30 @@ describe('ContractTypeChecker', () => {
         ),
       ).toEqual([]);
     });
+
+    it('should not throw any error for type verification with optional values missing', () => {
+      // Given
+      const config = {
+        database: {
+          host: undefined,
+          password: null,
+          responseLimit: faker.datatype.number(),
+        },
+        vcsProvider: {
+          paginationLength: faker.datatype.number(),
+        },
+        auth0: {
+          isAdmin: faker.datatype.boolean(),
+        },
+      };
+
+      //Then
+      expect(
+        contractTypeChecker.checkContractTypeCompatibility(
+          configContract,
+          config,
+        ),
+      ).toEqual([]);
+    });
   });
 });
