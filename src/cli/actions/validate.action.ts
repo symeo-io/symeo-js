@@ -18,7 +18,7 @@ export type StartActionInput = {
   localValuesPath: string;
 };
 
-export class VerifyAction implements Action<StartActionInput> {
+export class ValidateAction implements Action<StartActionInput> {
   protected readonly contractLoader = new ContractLoader();
   protected readonly contractUtils = new ContractUtils();
   protected readonly contractTypesFileGenerator =
