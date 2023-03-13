@@ -8,35 +8,42 @@ export class EnvFileToContractConverter {
   public convert(envFile: Record<string, string>): {
     contract: Contract;
     values: object;
+    envPropertyToContractPathMap: Record<string, string>;
   } {
     let contract: Contract = {};
     let values: object = {};
+    const envPropertyToContractPathMap: Record<string, string> = {};
 
     for (const propertyName of Object.keys(envFile)) {
-      const { contract: propertyContract, values: propertyValues } =
-        this.buildEnvPropertyContract(
-          propertyName,
-          envFile[propertyName],
-          Object.keys(envFile).filter((key) => key !== propertyName),
-        );
+      const {
+        contract: propertyContract,
+        values: propertyValues,
+        path,
+      } = this.buildEnvPropertyContract(
+        propertyName,
+        envFile[propertyName],
+        Object.keys(envFile).filter((key) => key !== propertyName),
+      );
 
       contract = merge(contract, propertyContract);
       values = merge(values, propertyValues);
+      envPropertyToContractPathMap[propertyName] = path;
     }
-    return { contract, values };
+    return { contract, values, envPropertyToContractPathMap };
   }
 
   private buildEnvPropertyContract(
     envPropertyName: string,
     envValue: string,
     adjacentEnvProperties: string[],
-  ): { contract: Contract; values: object } {
+  ): { contract: Contract; values: object; path: string } {
     const splitPropertyName = this.splitPropertyName(envPropertyName);
 
     if (splitPropertyName.length === 1) {
       return {
         contract: this.buildContractForProperty(envPropertyName, envValue),
         values: this.buildContractValue(envPropertyName, envValue),
+        path: this.toCamelCase(splitPropertyName),
       };
     }
 
@@ -53,10 +60,11 @@ export class EnvFileToContractConverter {
       return {
         contract: this.buildContractForProperty(envPropertyName, envValue),
         values: this.buildContractValue(envPropertyName, envValue),
+        path: this.toCamelCase(splitPropertyName),
       };
     }
 
-    const { contract, values } = this.buildEnvPropertyContract(
+    const { contract, values, path } = this.buildEnvPropertyContract(
       envPropertyName.replace(`${firstPropertyNameElement}_`, ''),
       envValue,
       siblingProperties.map((el) =>
@@ -70,6 +78,7 @@ export class EnvFileToContractConverter {
       values: {
         [firstPropertyNameElement.toLowerCase()]: values,
       },
+      path: `${firstPropertyNameElement.toLowerCase()}.${path}`,
     };
   }
 
@@ -111,7 +120,7 @@ export class EnvFileToContractConverter {
     const contractPropertyName = this.toCamelCase(splitPropertyName);
 
     return {
-      [contractPropertyName]: envValue,
+      [contractPropertyName]: this.parseValue(envValue),
     };
   }
 
@@ -159,5 +168,23 @@ export class EnvFileToContractConverter {
     }
 
     return undefined;
+  }
+
+  private parseValue(value: string): string | number | boolean {
+    const type = this.inferContractPropertyFromValue(value);
+
+    if (type === 'integer') {
+      return parseInt(value);
+    }
+
+    if (type === 'float') {
+      return parseInt(value);
+    }
+
+    if (type === 'boolean') {
+      return value === 'true';
+    }
+
+    return value;
   }
 }
