@@ -1,7 +1,7 @@
 import { EnvFileToContractConverter } from 'src/contract/env-file-to-contract.converter';
 import { faker } from '@faker-js/faker';
 
-describe('loadConfigFormatFile', () => {
+describe('EnvFileToContractConverter', () => {
   const envFileToContractConverter = new EnvFileToContractConverter();
 
   it('should convert env file to contract and values', () => {

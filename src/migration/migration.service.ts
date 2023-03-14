@@ -3,8 +3,8 @@ import path from 'path';
 
 const PROCESS_ENV_PREFIX = 'process.env.';
 const SYMEO_CONFIG_PREFIX = 'config.';
-const SYMEO_IMPORT = 'import { config } from "symeo-js"';
-const SYMEO_REQUIRE = 'const { config } = require("symeo-js")';
+const SYMEO_IMPORT = "import { config } from 'symeo-js';";
+const SYMEO_REQUIRE = "const { config } = require('symeo-js');";
 
 export class MigrationService {
   public migrate(
