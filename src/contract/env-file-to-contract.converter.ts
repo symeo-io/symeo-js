@@ -178,7 +178,7 @@ export class EnvFileToContractConverter {
     }
 
     if (type === 'float') {
-      return parseInt(value);
+      return parseFloat(value);
     }
 
     if (type === 'boolean') {
