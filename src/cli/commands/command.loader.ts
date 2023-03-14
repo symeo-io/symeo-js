@@ -3,16 +3,19 @@ import { Command } from 'commander';
 import { BuildCommand } from './build.command';
 import { StartCommand } from './start.command';
 import { ValidateCommand } from './validate.command';
+import { MigrateCommand } from './migrate.command';
 import { ERROR_PREFIX } from '../ui/prefixes';
 import { BuildAction } from '../actions/build.action';
 import { StartAction } from '../actions/start.action';
 import { ValidateAction } from '../actions/validate.action';
+import { MigrateAction } from '../actions/migrate.action';
 
 export class CommandLoader {
   public static async load(program: Command): Promise<void> {
     new BuildCommand(new BuildAction()).load(program);
     new StartCommand(new StartAction()).load(program);
     new ValidateCommand(new ValidateAction()).load(program);
+    new MigrateCommand(new MigrateAction()).load(program);
 
     this.handleInvalidCommand(program);
   }
