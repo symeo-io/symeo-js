@@ -141,6 +141,10 @@ export class EnvFileToContractConverter {
   }
 
   private inferContractPropertyFromValue(value: string): ContractPropertyType {
+    if (!value) {
+      return 'string';
+    }
+
     if (!!value.match(INTEGER_REGEX)) {
       return 'integer';
     }
@@ -162,6 +166,7 @@ export class EnvFileToContractConverter {
     if (
       propertyName.toLowerCase().includes('key') ||
       propertyName.toLowerCase().includes('password') ||
+      propertyName.toLowerCase().includes('token') ||
       propertyName.toLowerCase().includes('secret')
     ) {
       return true;
