@@ -141,6 +141,10 @@ export class EnvFileToContractConverter {
   }
 
   private inferContractPropertyFromValue(value: string): ContractPropertyType {
+    if (!value) {
+      return 'string';
+    }
+
     if (!!value.match(INTEGER_REGEX)) {
       return 'integer';
     }

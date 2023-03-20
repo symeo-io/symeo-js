@@ -23,6 +23,7 @@ describe('EnvFileToContractConverter', () => {
       CORS_AUTHORIZED_ORIGIN: faker.internet.url(),
       GOOGLE_CLIENT_ID: faker.datatype.uuid(),
       GOOGLE_CLIENT_SECRET: faker.datatype.uuid(),
+      EMPTY: '',
     };
 
     // When
@@ -55,6 +56,7 @@ describe('EnvFileToContractConverter', () => {
           secret: { type: 'string', secret: true },
         },
       },
+      empty: { type: 'string' },
     });
 
     expect(values).toEqual({
@@ -83,6 +85,7 @@ describe('EnvFileToContractConverter', () => {
           secret: envFile.GOOGLE_CLIENT_SECRET,
         },
       },
+      empty: envFile.EMPTY,
     });
 
     expect(envPropertyToContractPathMap).toEqual({
@@ -102,6 +105,7 @@ describe('EnvFileToContractConverter', () => {
       CORS_AUTHORIZED_ORIGIN: 'corsAuthorizedOrigin',
       GOOGLE_CLIENT_ID: 'google.client.id',
       GOOGLE_CLIENT_SECRET: 'google.client.secret',
+      EMPTY: 'empty',
     });
   });
 });

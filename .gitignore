@@ -42,3 +42,4 @@ lerna-debug.log*
 # Configuration
 symeo.local.yml
 symeo.config.yml
+.env
