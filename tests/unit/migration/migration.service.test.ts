@@ -77,6 +77,43 @@ describe('MigrationService', () => {
     expect(migratedCodeFileContent).toEqual(expectedCodeFileContent);
   });
 
+  it('should not change file if env variables not in given en file', () => {
+    // Given
+    const codeFileContent = fsExtra.readFileSync(
+      join(__dirname, '../../resources/migration/main.ts'),
+      { encoding: 'utf-8' },
+    );
+    const expectedCodeFileContent = fsExtra.readFileSync(
+      join(__dirname, '../../resources/migration/main.ts'),
+      { encoding: 'utf-8' },
+    );
+
+    const codeFilePath = join(tmpDirectoryPath, 'main.ts');
+    fsExtra.writeFileSync(codeFilePath, codeFileContent);
+
+    const envFile = {
+      AWS_PROFILE: faker.lorem.slug(),
+      AWS_REGION: faker.lorem.slug(),
+    };
+
+    const envPropertyToContractPathMap = {
+      AWS_PROFILE: 'aws.profile',
+      AWS_REGION: 'aws.region',
+    };
+
+    migrationService.migrate(
+      tmpDirectoryPath,
+      envFile,
+      envPropertyToContractPathMap,
+    );
+
+    const migratedCodeFileContent = fsExtra.readFileSync(codeFilePath, {
+      encoding: 'utf-8',
+    });
+
+    expect(migratedCodeFileContent).toEqual(expectedCodeFileContent);
+  });
+
   it('should replace env variable by config for TypeScript', () => {
     // Given
     const codeFileContent = fsExtra.readFileSync(

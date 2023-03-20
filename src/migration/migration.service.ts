@@ -1,10 +1,14 @@
 import { readdirSync, readFileSync, lstatSync, writeFileSync } from 'fs';
 import path from 'path';
 
-const PROCESS_ENV_PREFIX = 'process.env.';
-const SYMEO_CONFIG_PREFIX = 'config.';
-const SYMEO_IMPORT = "import { config } from 'symeo-js';";
-const SYMEO_REQUIRE = "const { config } = require('symeo-js');";
+const PROCESS_ENV_PREFIX_1 = 'process.env.';
+const PROCESS_ENV_PREFIX_2 = 'process.env["';
+const PROCESS_ENV_SUFFIX_2 = '"]';
+const PROCESS_ENV_PREFIX_3 = "process.env['";
+const PROCESS_ENV_SUFFIX_3 = "']";
+const SYMEO_CONFIG_PREFIX = 'symeoConfig.';
+const SYMEO_IMPORT = "import { config as symeoConfig } from 'symeo-js';";
+const SYMEO_REQUIRE = "const { config: symeoConfig } = require('symeo-js');";
 
 export class MigrationService {
   public migrate(
@@ -12,8 +16,10 @@ export class MigrationService {
     envFile: Record<string, string>,
     envPropertyToContractPathMap: Record<string, string>,
   ): void {
-    const codeFilesWithEnvVariables =
-      this.listCodeFilesContainingEnvVariables(srcPath);
+    const codeFilesWithEnvVariables = this.listCodeFilesContainingEnvVariables(
+      srcPath,
+      envFile,
+    );
 
     for (const file of codeFilesWithEnvVariables) {
       this.replaceFileEnvVariable(file, envFile, envPropertyToContractPathMap);
@@ -32,23 +38,38 @@ export class MigrationService {
       : `${SYMEO_REQUIRE}\n${fileContent}`;
 
     for (const envProperty of Object.keys(envFile)) {
-      newFileContent = newFileContent
-        .split(`${PROCESS_ENV_PREFIX}${envProperty}`)
-        .join(
-          `${SYMEO_CONFIG_PREFIX}${envPropertyToContractPathMap[envProperty]}`,
-        );
+      const envStrings = this.buildProcessEnvStrings(envProperty);
+
+      for (const envString of envStrings) {
+        newFileContent = newFileContent
+          .split(envString)
+          .join(
+            `${SYMEO_CONFIG_PREFIX}${envPropertyToContractPathMap[envProperty]}`,
+          );
+      }
     }
 
     writeFileSync(file, newFileContent);
   }
 
-  private listCodeFilesContainingEnvVariables(srcPath: string): string[] {
+  private listCodeFilesContainingEnvVariables(
+    srcPath: string,
+    envFile: Record<string, string>,
+  ): string[] {
     const results: string[] = [];
     const codeFiles = this.listJavaScriptOrTypeScriptFiles(srcPath);
+    const envProperties = Object.keys(envFile);
+    const envStrings = envProperties.flatMap((propertyName) =>
+      this.buildProcessEnvStrings(propertyName),
+    );
 
     for (const file of codeFiles) {
-      if (readFileSync(file).includes(PROCESS_ENV_PREFIX)) {
-        results.push(file);
+      const fileContent = readFileSync(file);
+      for (const envString of envStrings) {
+        if (fileContent.includes(envString)) {
+          results.push(file);
+          break;
+        }
       }
     }
 
@@ -75,5 +96,13 @@ export class MigrationService {
     });
 
     return results;
+  }
+
+  private buildProcessEnvStrings(propertyName: string): string[] {
+    return [
+      `${PROCESS_ENV_PREFIX_1}${propertyName}`,
+      `${PROCESS_ENV_PREFIX_2}${propertyName}${PROCESS_ENV_SUFFIX_2}`,
+      `${PROCESS_ENV_PREFIX_3}${propertyName}${PROCESS_ENV_SUFFIX_3}`,
+    ];
   }
 }
