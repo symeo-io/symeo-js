@@ -166,6 +166,7 @@ export class EnvFileToContractConverter {
     if (
       propertyName.toLowerCase().includes('key') ||
       propertyName.toLowerCase().includes('password') ||
+      propertyName.toLowerCase().includes('token') ||
       propertyName.toLowerCase().includes('secret')
     ) {
       return true;
