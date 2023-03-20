@@ -5,7 +5,7 @@ import * as contextService from 'request-context';
 import { GqlAuthGuard } from './authentication/gql-auth-guard';
 import { AppModule } from './app.module';
 
-if (symeoConfig.nodeEnv === 'local' || symeoConfig.nodeEnv === 'test') {
+if (process.env.NODE_ENV === 'local' || process.env.NODE_ENV === 'test') {
   console.log('Running local');
 }
 
@@ -14,7 +14,7 @@ async function bootstrap() {
 
   app.enableCors({
     credentials: true,
-    origin: symeoConfig.corsAuthorizedOrigin,
+    origin: process.env.CORS_AUTHORIZED_ORIGIN,
   });
   app.use(cookieParser());
   app.use(contextService.middleware('request'));
@@ -23,7 +23,7 @@ async function bootstrap() {
     next();
   });
   app.useGlobalGuards(new GqlAuthGuard());
-  app.logging(symeoConfig.logging);
+  app.logging(process.env.LOGGING);
 
   await app.listen(3000);
 }
