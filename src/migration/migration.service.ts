@@ -32,10 +32,18 @@ export class MigrationService {
     envPropertyToContractPathMap: Record<string, string>,
   ): void {
     const isTypeScript = file.endsWith('.ts');
-    const fileContent = readFileSync(file);
-    let newFileContent = isTypeScript
-      ? `${SYMEO_IMPORT}\n${fileContent}`
-      : `${SYMEO_REQUIRE}\n${fileContent}`;
+    const fileContent = readFileSync(file, { encoding: 'utf-8' });
+
+    let newFileContent = fileContent;
+
+    if (
+      (isTypeScript && !newFileContent.includes(SYMEO_IMPORT)) ||
+      (!isTypeScript && !newFileContent.includes(SYMEO_REQUIRE))
+    ) {
+      newFileContent = isTypeScript
+        ? `${SYMEO_IMPORT}\n${newFileContent}`
+        : `${SYMEO_REQUIRE}\n${newFileContent}`;
+    }
 
     for (const envProperty of Object.keys(envFile)) {
       const envStrings = this.buildProcessEnvStrings(envProperty);
