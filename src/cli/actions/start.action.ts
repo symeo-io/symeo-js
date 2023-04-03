@@ -3,7 +3,7 @@ import spawn from 'cross-spawn';
 import { Action } from './action';
 import { ContractLoader } from '../../contract/contract.loader';
 import { spin } from '../ui/spin';
-import { ContractTypesGenerator } from '../../contract-type-generator/contract-types.generator';
+import { SdkGenerator } from '../../sdk/sdk.generator';
 import {
   API_KEY_VARIABLE_NAME,
   API_URL_VARIABLE_NAME,
@@ -11,8 +11,8 @@ import {
   LOCAL_VALUES_FILE_VARIABLE_NAME,
 } from './action.contants';
 import { ContractUtils } from '../../contract/contract.utils';
-import { ContractTypesFileGenerator } from '../../contract-type-generator/contract-types-file.generator';
-import { TypeScriptTranspiler } from '../../contract-type-generator/typescript.transpiler';
+import { ContractTypesFileGenerator } from '../../sdk/contract-types-file.generator';
+import { TypeScriptTranspiler } from '../../sdk/typescript.transpiler';
 
 export type StartActionInput = {
   contractPath: string;
@@ -30,7 +30,7 @@ export class StartAction implements Action<StartActionInput> {
   protected readonly contractTypesFileGenerator =
     new ContractTypesFileGenerator(this.contractUtils);
   protected readonly typeScriptTranspiler = new TypeScriptTranspiler();
-  protected readonly contractTypesGenerator = new ContractTypesGenerator(
+  protected readonly contractTypesGenerator = new SdkGenerator(
     this.contractTypesFileGenerator,
     this.typeScriptTranspiler,
   );

@@ -2,7 +2,7 @@ import { join } from 'path';
 import fsExtra from 'fs-extra';
 import SpyInstance = jest.SpyInstance;
 import { dir } from 'tmp-promise';
-import { ContractTypesFileGenerator } from 'src/contract-type-generator/contract-types-file.generator';
+import { ContractTypesFileGenerator } from 'src/sdk/contract-types-file.generator';
 import { ContractPropertyType } from 'src/contract/contract.types';
 import { ContractUtils } from 'src/contract/contract.utils';
 
