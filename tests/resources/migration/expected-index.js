@@ -1,4 +1,4 @@
-const { config: symeoConfig } = require('symeo-js');
+const { config: symeoConfig } = require('@symeo-sdk');
 const express = require('express');
 const cors = require('cors');
 const app = express();

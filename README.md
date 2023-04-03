@@ -89,19 +89,19 @@ And then run `npm run build:config` or `yarn build:config`
 Your configuration is then accessible with the import:
 
 ```typescript
-import { config } from 'symeo-js';
+import { config } from '@symeo-sdk';
 ```
 
 Or using require:
 
 ```javascript
-const { config } = require('symeo-js');
+const { config } = require('@symeo-sdk');
 ```
 
 For example:
 
 ```typescript
-import { config } from 'symeo-js';
+import { config } from '@symeo-sdk';
 import { Client } from "postgres";
 
 export class DatabaseClient {
