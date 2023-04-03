@@ -1,13 +1,13 @@
 import chalk from 'chalk';
 import { Action } from './action';
 import { ContractLoader } from '../../contract/contract.loader';
-import { ContractTypesGenerator } from '../../contract-type-generator/contract-types.generator';
+import { SdkGenerator } from '../../sdk/sdk.generator';
 import { RawValuesFetcher } from '../../values/raw-values.fetcher';
 import { ValuesInitializer } from '../../values/values.initializer';
 import { ContractTypeChecker } from '../../contract/contract-type.checker';
 import { ContractUtils } from '../../contract/contract.utils';
-import { ContractTypesFileGenerator } from '../../contract-type-generator/contract-types-file.generator';
-import { TypeScriptTranspiler } from '../../contract-type-generator/typescript.transpiler';
+import { ContractTypesFileGenerator } from '../../sdk/contract-types-file.generator';
+import { TypeScriptTranspiler } from '../../sdk/typescript.transpiler';
 
 export type StartActionInput = {
   contractPath: string;
@@ -22,7 +22,7 @@ export class ValidateAction implements Action<StartActionInput> {
   protected readonly contractTypesFileGenerator =
     new ContractTypesFileGenerator(this.contractUtils);
   protected readonly typeScriptTranspiler = new TypeScriptTranspiler();
-  protected readonly contractTypesGenerator = new ContractTypesGenerator(
+  protected readonly contractTypesGenerator = new SdkGenerator(
     this.contractTypesFileGenerator,
     this.typeScriptTranspiler,
   );
