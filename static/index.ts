@@ -1,5 +1,5 @@
 import { fetchConfig } from 'symeo-js';
-import { Config } from '.symeo-js/config/types';
+import { Config } from './types';
 
 const config: Config = fetchConfig() as Config;
 
