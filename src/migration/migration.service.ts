@@ -7,8 +7,8 @@ const PROCESS_ENV_SUFFIX_2 = '"]';
 const PROCESS_ENV_PREFIX_3 = "process.env['";
 const PROCESS_ENV_SUFFIX_3 = "']";
 const SYMEO_CONFIG_PREFIX = 'symeoConfig.';
-const SYMEO_IMPORT = "import { config as symeoConfig } from 'symeo-js';";
-const SYMEO_REQUIRE = "const { config: symeoConfig } = require('symeo-js');";
+const SYMEO_IMPORT = "import { config as symeoConfig } from '@symeo-sdk';";
+const SYMEO_REQUIRE = "const { config: symeoConfig } = require('@symeo-sdk');";
 
 export class MigrationService {
   public migrate(

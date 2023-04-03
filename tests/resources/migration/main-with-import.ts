@@ -1,4 +1,4 @@
-import { config as symeoConfig } from 'symeo-js';
+import { config as symeoConfig } from '@symeo-sdk';
 import { NestFactory } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 import * as contextService from 'request-context';
