@@ -7,9 +7,12 @@ import { join } from 'path';
 import { ContractTypesFileGenerator } from './contract-types-file.generator';
 import { TypeScriptTranspiler } from './typescript.transpiler';
 
-export class ContractTypesGenerator {
-  OUTPUT_PATH: string = join(process.cwd(), 'node_modules/.symeo-js/config');
-  CHECKSUM_PATH: string = join(this.OUTPUT_PATH, './checksum');
+export class SdkGenerator {
+  SDK_INDEX_FILE_PATH: string = join(__dirname, '../../static/index.ts');
+  SDK_PACKAGE_FILE_PATH: string = join(__dirname, '../../static/package.json');
+  SDK_OUTPUT_PATH: string = join(process.cwd(), 'node_modules/@symeo-sdk');
+  SDK_SRC_OUTPUT_PATH: string = join(this.SDK_OUTPUT_PATH, '.dist');
+  CHECKSUM_PATH: string = join(this.SDK_OUTPUT_PATH, './checksum');
 
   constructor(
     private readonly contractTypesFileGenerator: ContractTypesFileGenerator,
@@ -23,14 +26,28 @@ export class ContractTypesGenerator {
     const contractChecksum = checksum(JSON.stringify(contract));
 
     if (forceRecreate || this.shouldRegenerateContractTypes(contractChecksum)) {
-      await mkdirp(this.OUTPUT_PATH);
+      await mkdirp(this.SDK_SRC_OUTPUT_PATH);
 
       const randomTmpDir = await this.tmpDir('symeo');
+
+      await fsExtra.copy(
+        this.SDK_INDEX_FILE_PATH,
+        join(randomTmpDir, 'index.ts'),
+      );
       await this.contractTypesFileGenerator.generateTypesFile(
         randomTmpDir,
         contract,
       );
-      await this.typeScriptTranspiler.transpile(randomTmpDir, this.OUTPUT_PATH);
+      await this.typeScriptTranspiler.transpile(
+        randomTmpDir,
+        this.SDK_SRC_OUTPUT_PATH,
+      );
+
+      await fsExtra.copy(
+        this.SDK_PACKAGE_FILE_PATH,
+        join(this.SDK_OUTPUT_PATH, 'package.json'),
+      );
+
       fsExtra.writeFileSync(this.CHECKSUM_PATH, contractChecksum, 'utf8');
     }
   }

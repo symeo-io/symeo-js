@@ -3,9 +3,9 @@ import { anyString, anything, instance, mock, verify } from 'ts-mockito';
 import fsExtra from 'fs-extra';
 import { faker } from '@faker-js/faker';
 import SpyInstance = jest.SpyInstance;
-import { ContractTypesFileGenerator } from 'src/contract-type-generator/contract-types-file.generator';
-import { TypeScriptTranspiler } from 'src/contract-type-generator/typescript.transpiler';
-import { ContractTypesGenerator } from 'src/contract-type-generator/contract-types.generator';
+import { ContractTypesFileGenerator } from 'src/sdk/contract-types-file.generator';
+import { TypeScriptTranspiler } from 'src/sdk/typescript.transpiler';
+import { SdkGenerator } from 'src/sdk/sdk.generator';
 import { Contract } from 'src/contract/contract.types';
 import mkdirp from 'mkdirp';
 
@@ -24,7 +24,7 @@ describe('ConfigLibrary', () => {
     let mockedConfigTranspiler: TypeScriptTranspiler;
     let configTranspiler: TypeScriptTranspiler;
 
-    let contractTypesGenerator: ContractTypesGenerator;
+    let contractTypesGenerator: SdkGenerator;
 
     const configurationContract: Contract = {
       aws: {
@@ -53,7 +53,7 @@ describe('ConfigLibrary', () => {
 
       mockedMkdirp.mockImplementation();
 
-      contractTypesGenerator = new ContractTypesGenerator(
+      contractTypesGenerator = new SdkGenerator(
         contractTypesFileGenerator,
         configTranspiler,
       );
