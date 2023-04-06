@@ -134,7 +134,7 @@ export class ContractTypeChecker {
       parentPath,
       propertyName,
     );
-    return `Configuration property "${displayedPropertyName}" which equals "${valuesProperty}" does not match regex "${contractProperty.regex}" defined in contract`;
+    return `Configuration property "${displayedPropertyName}" with value "${valuesProperty}" does not match regex "${contractProperty.regex}" defined in contract`;
   }
 
   private buildParentPath(
