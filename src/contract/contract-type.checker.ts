@@ -61,6 +61,25 @@ export class ContractTypeChecker {
             valuesProperty,
           ),
         );
+        return;
+      }
+
+      if (
+        this.isDefined(valuesProperty) &&
+        this.contractUtils.hasRegex(contractProperty as ContractProperty) &&
+        !this.valueMatchContractRegex(
+          contractProperty as ContractProperty,
+          valuesProperty,
+        )
+      ) {
+        errors.push(
+          this.buildWrongRegexError(
+            propertyName,
+            parentPath,
+            contractProperty,
+            valuesProperty,
+          ),
+        );
       }
     });
 
@@ -105,6 +124,19 @@ export class ContractTypeChecker {
     }".`;
   }
 
+  private buildWrongRegexError(
+    propertyName: string,
+    parentPath: string | undefined,
+    contractProperty: Contract | ContractProperty,
+    valuesProperty: any,
+  ) {
+    const displayedPropertyName = this.buildParentPath(
+      parentPath,
+      propertyName,
+    );
+    return `Configuration property "${displayedPropertyName}" with value "${valuesProperty}" does not match regex "${contractProperty.regex}" defined in contract`;
+  }
+
   private buildParentPath(
     previousParentPath: string | undefined,
     propertyName: string,
@@ -120,5 +152,14 @@ export class ContractTypeChecker {
 
   private isUndefined(value: any): boolean {
     return !this.isDefined(value);
+  }
+
+  private valueMatchContractRegex(
+    contractProperty: ContractProperty,
+    value: any,
+  ) {
+    return (
+      contractProperty.regex && new RegExp(contractProperty.regex).test(value)
+    );
   }
 }
