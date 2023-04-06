@@ -32,6 +32,13 @@ describe('ContractTypeChecker', () => {
           type: 'boolean' as ContractPropertyType,
         },
       },
+      currentUser: {
+        email: {
+          type: 'string' as ContractPropertyType,
+          regex:
+            '^([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+).([a-zA-Z]{2,5})$',
+        },
+      },
     };
 
     it('should throw new error for non config property missing or not well named', () => {
@@ -46,6 +53,9 @@ describe('ContractTypeChecker', () => {
         },
         auth0: {
           isAdmin: faker.datatype.boolean(),
+        },
+        currentUser: {
+          email: faker.internet.email(),
         },
       };
       const badNamedProperty = 'database';
@@ -73,6 +83,9 @@ describe('ContractTypeChecker', () => {
         },
         auth0: {
           isAdmin: faker.datatype.boolean(),
+        },
+        currentUser: {
+          email: faker.internet.email(),
         },
       };
       const missingPropertyValueNotOptional = 'database.responseLimit';
@@ -104,6 +117,9 @@ describe('ContractTypeChecker', () => {
         auth0: {
           isAdmin: faker.datatype.boolean(),
         },
+        currentUser: {
+          email: faker.internet.email(),
+        },
       };
 
       //Then
@@ -116,6 +132,36 @@ describe('ContractTypeChecker', () => {
         `Configuration property "${wrongTypeProperty}" has type "${typeof wrongTypeFaker}" while configuration contract defined "${wrongTypeProperty}" as "${
           configContract.database.responseLimit.type
         }".`,
+      ]);
+    });
+
+    it('should throw new error for config property value which do not match regex from contract', () => {
+      // Given
+      const config = {
+        database: {
+          host: faker.datatype.string(),
+          password: faker.datatype.string(),
+          responseLimit: faker.datatype.number(),
+        },
+        vcsProvider: {
+          paginationLength: faker.datatype.number(),
+        },
+        auth0: {
+          isAdmin: faker.datatype.boolean(),
+        },
+        currentUser: {
+          email: faker.internet.url(),
+        },
+      };
+
+      //Then
+      expect(
+        contractTypeChecker.checkContractTypeCompatibility(
+          configContract,
+          config,
+        ),
+      ).toEqual([
+        `Configuration property "currentUser.email" which equals "${config.currentUser.email}" does not match regex "${configContract.currentUser.email.regex}" defined in contract`,
       ]);
     });
 
@@ -132,6 +178,9 @@ describe('ContractTypeChecker', () => {
         },
         auth0: {
           isAdmin: faker.datatype.boolean(),
+        },
+        currentUser: {
+          email: faker.internet.email(),
         },
       };
 
@@ -157,6 +206,9 @@ describe('ContractTypeChecker', () => {
         },
         auth0: {
           isAdmin: faker.datatype.boolean(),
+        },
+        currentUser: {
+          email: faker.internet.email(),
         },
       };
 
