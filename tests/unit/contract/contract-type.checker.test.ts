@@ -161,7 +161,7 @@ describe('ContractTypeChecker', () => {
           config,
         ),
       ).toEqual([
-        `Configuration property "currentUser.email" which equals "${config.currentUser.email}" does not match regex "${configContract.currentUser.email.regex}" defined in contract`,
+        `Configuration property "currentUser.email" with value "${config.currentUser.email}" does not match regex "${configContract.currentUser.email.regex}" defined in contract`,
       ]);
     });
 
