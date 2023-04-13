@@ -8,4 +8,8 @@ export class ContractUtils {
   isContractProperty(el: Contract | ContractProperty) {
     return el.type && typeof el.type === 'string';
   }
+
+  hasRegex(contractProperty: ContractProperty) {
+    return !!contractProperty.regex;
+  }
 }
