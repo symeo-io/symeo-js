@@ -48,7 +48,7 @@ yarn add symeo-js
 
 ## Usage
 
-### Define configuration contract
+### Define your configuration contract
 
 Create a `symeo.config.yml` file in the root of your project, and define the structure and types of your application configuration.
 
