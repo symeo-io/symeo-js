@@ -33,7 +33,9 @@ export class StartCommand extends AbstractCommand<StartAction> {
         'Local configuration file',
         DEFAULT_LOCAL_VALUES_PATH,
       )
-      .description('Build Symeo contract types.')
+      .description(
+        'Used to inject configuration values into your application process.',
+      )
       .action(async (startCommand, options, command) => {
         const startCommandArgs = command.args.slice(1);
 
