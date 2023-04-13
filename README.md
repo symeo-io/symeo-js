@@ -48,7 +48,7 @@ yarn add symeo-js
 
 ## Usage
 
-### Define configuration contract
+### Define your configuration contract
 
 Create a `symeo.config.yml` file in the root of your project, and define the structure and types of your application configuration.
 
@@ -64,11 +64,13 @@ database:
   password:
     type: string
     secret: true
+    regex: ^[a-zA-Z0-9]+$
 ```
 
 - You can nest properties to any depth level
 - Supported types are `boolean`, `string`, `integer` and `float`
 - Properties can be flagged with `optional: true`, or `secret: true`
+- For type `string`, you can add a regex expression that the value will have to match
 
 ### Build your configuration to access it in your code
 
