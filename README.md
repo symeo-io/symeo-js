@@ -69,6 +69,7 @@ database:
 - You can nest properties to any depth level
 - Supported types are `boolean`, `string`, `integer` and `float`
 - Properties can be flagged with `optional: true`, or `secret: true`
+- For type `string`, you can add a regex expression that the value will have to match (e.g `regex: `)
 
 ### Build your configuration to access it in your code
 
