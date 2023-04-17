@@ -32,7 +32,7 @@ The Symeo SDK made for interacting with your Symeo secrets and configuration fro
 
 - [Install](#install)
 - [Usage](#usage)
-- [Symeo CLI options](#symeo-cli-options)
+- [Symeo CLI options](#symeo-cli-commands)
 
 ## Install
 
