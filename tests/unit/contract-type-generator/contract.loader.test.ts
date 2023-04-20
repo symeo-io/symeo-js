@@ -4,10 +4,14 @@ import fsExtra from 'fs-extra';
 import { dir } from 'tmp-promise';
 import { ContractLoader } from 'src/contract/contract.loader';
 import { Contract } from 'src/contract/contract.types';
+import { ContractUtils } from 'src/contract/contract.utils';
+import { ContractValidator } from 'src/contract/contract.validator';
 
 describe('loadConfigFormatFile', () => {
   let tmpDirectoryPath: string;
-  const configContractLoader: ContractLoader = new ContractLoader();
+  const contractUtils = new ContractUtils();
+  const contractValidator = new ContractValidator(contractUtils);
+  const configContractLoader = new ContractLoader(contractValidator);
 
   beforeEach(async () => {
     tmpDirectoryPath = (await dir({ prefix: 'symeo-test' })).path;
