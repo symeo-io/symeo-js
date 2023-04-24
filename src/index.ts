@@ -10,11 +10,13 @@ import {
 } from './cli/actions/action.contants';
 import { RawValuesFetcher } from './values/raw-values.fetcher';
 import { ContractUtils } from './contract/contract.utils';
+import { ContractValidator } from './contract/contract.validator';
 
 export function fetchConfig() {
   const rawValuesFetcher = new RawValuesFetcher();
-  const contractLoader = new ContractLoader();
   const contractUtils = new ContractUtils();
+  const contractValidator = new ContractValidator(contractUtils);
+  const contractLoader = new ContractLoader(contractValidator);
   const valuesInitializer = new ValuesInitializer(contractUtils);
   const contractTypeChecker = new ContractTypeChecker(contractUtils);
 

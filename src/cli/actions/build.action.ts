@@ -6,6 +6,7 @@ import chalk from 'chalk';
 import { ContractTypesFileGenerator } from '../../sdk/contract-types-file.generator';
 import { TypeScriptTranspiler } from '../../sdk/typescript.transpiler';
 import { ContractUtils } from '../../contract/contract.utils';
+import { ContractValidator } from '../../contract/contract.validator';
 
 export type BuildActionInput = {
   contractPath: string;
@@ -13,8 +14,13 @@ export type BuildActionInput = {
 };
 
 export class BuildAction implements Action<BuildActionInput> {
-  protected readonly contractLoader = new ContractLoader();
   protected readonly contractUtils = new ContractUtils();
+  protected readonly contractValidator = new ContractValidator(
+    this.contractUtils,
+  );
+  protected readonly contractLoader = new ContractLoader(
+    this.contractValidator,
+  );
   protected readonly contractTypesFileGenerator =
     new ContractTypesFileGenerator(this.contractUtils);
   protected readonly typeScriptTranspiler = new TypeScriptTranspiler();

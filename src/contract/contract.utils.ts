@@ -6,7 +6,7 @@ export class ContractUtils {
   }
 
   isContractProperty(el: Contract | ContractProperty) {
-    return el.type && typeof el.type === 'string';
+    return el && el.type && typeof el.type === 'string';
   }
 
   hasRegex(contractProperty: ContractProperty) {

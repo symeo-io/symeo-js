@@ -2,6 +2,13 @@ export type Contract = {
   [property: string]: Contract | ContractProperty;
 };
 
+export const supportedContractPropertyOptions = [
+  'type',
+  'secret',
+  'optional',
+  'regex',
+];
+
 export type ContractProperty = {
   type: ContractPropertyType;
   secret?: boolean;
@@ -9,4 +16,11 @@ export type ContractProperty = {
   regex?: string;
 };
 
-export type ContractPropertyType = 'string' | 'integer' | 'float' | 'boolean';
+export const contractPropertyTypes = [
+  'string',
+  'integer',
+  'float',
+  'boolean',
+] as const;
+
+export type ContractPropertyType = (typeof contractPropertyTypes)[number];

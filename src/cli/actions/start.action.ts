@@ -13,6 +13,7 @@ import {
 import { ContractUtils } from '../../contract/contract.utils';
 import { ContractTypesFileGenerator } from '../../sdk/contract-types-file.generator';
 import { TypeScriptTranspiler } from '../../sdk/typescript.transpiler';
+import { ContractValidator } from '../../contract/contract.validator';
 
 export type StartActionInput = {
   contractPath: string;
@@ -25,8 +26,13 @@ export type StartActionInput = {
 };
 
 export class StartAction implements Action<StartActionInput> {
-  protected readonly contractLoader = new ContractLoader();
   protected readonly contractUtils = new ContractUtils();
+  protected readonly contractValidator = new ContractValidator(
+    this.contractUtils,
+  );
+  protected readonly contractLoader = new ContractLoader(
+    this.contractValidator,
+  );
   protected readonly contractTypesFileGenerator =
     new ContractTypesFileGenerator(this.contractUtils);
   protected readonly typeScriptTranspiler = new TypeScriptTranspiler();
